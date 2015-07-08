@@ -20,10 +20,13 @@ public class Gene {
  public static HashMap<String,String> getPharmgkbIDEntrezIDLinks() {
 		HashMap<String,String> links = new HashMap<String, String>();
 		String queryLinks = "SELECT ?gene ?entrez_id\n" + 
-				"	WHERE\n" + 
-				"   {\n" + 
-				"	?gene <http://biodb.jp/mappings/to_entrez_id> ?entrez_id.\n" + 
-				"   FILTER regex(str(?gene), \"^http://biodb.jp/mappings/pharmgkb_id/\")";
+				"WHERE {\n" + 
+				" ?gene_uri <http://biodb.jp/mappings/to_entrez_id> ?entrez_id_uri.\n" + 
+				" FILTER regex(str(?gene_uri), \"^http://biodb.jp/mappings/pharmgkb_id/\")\n" + 
+				" BIND(REPLACE(str(?gene_uri), \"^http://biodb.jp/mappings/pharmgkb_id/\",\"\") AS ?gene)\n" + 
+				" BIND(REPLACE(str(?entrez_id_uri), \"^http://biodb.jp/mappings/entrez_id/\",\"\") AS ?entrez_id)\n" + 
+				"}\n" + 
+				"";
 		
 		Query query = QueryFactory.create(queryLinks);
 		QueryExecution queryExec = QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/mappings/sparql", queryLinks);
@@ -41,7 +44,7 @@ public class Gene {
  
  public Gene(String pharmgkb_id) {
 	this.pharmgkb_id = pharmgkb_id;
-	this.entrez_id = entrez_id;
+	this.entrez_id = "";
 	attributes = new HashSet<String>();
 	linked_diseases = new HashSet<String>();
 	
@@ -53,26 +56,6 @@ public HashSet<String> getAttributes() {
 
 public void addAttribute(String attribute) {
 	this.attributes.add(attribute);
-}
-
-private String getEntrezId() {
-	String entrez_id="";
-	String uri = "<http://biodb.jp/mappings/pharmgkb_id/"+this.pharmgkb_id+">";
-	String queryGeneAttributes = "SELECT ?entrez_id\n" + 
-			"WHERE {\n" + 
-			uri+" <http://biodb.jp/mappings/to_entrez_id> ?entrez_id\n" + 
-			"}\n";
-	Query query = QueryFactory.create(queryGeneAttributes);
-	QueryExecution queryExec = QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/disgenet/sparql", queryGeneAttributes);
-	ResultSet results = queryExec.execSelect();
-	while(results.hasNext()) {
-		QuerySolution solution = results.nextSolution();
-		RDFNode entrezIdNode = solution.get("entrez_id");
-		entrez_id = entrezIdNode.toString();
-	}
-	queryExec.close();
-	return entrez_id;
-	
 }
 
 public void setAttributes() {
@@ -138,5 +121,35 @@ public void addLinkedDiseases(String linked_disease) {
 public String toString() {
 	return "Gene [pharmgkb_id=" + pharmgkb_id + ", entrez_id=" + entrez_id + ", attributes=" + attributes
 			+ ", linked_diseases=" + linked_diseases + "]";
+}
+
+
+public String getPharmgkb_id() {
+	return pharmgkb_id;
+}
+
+
+public void setPharmgkb_id(String pharmgkb_id) {
+	this.pharmgkb_id = pharmgkb_id;
+}
+
+
+public String getEntrez_id() {
+	return entrez_id;
+}
+
+
+public void setEntrez_id(String entrez_id) {
+	this.entrez_id = entrez_id;
+}
+
+
+public void setAttributes(HashSet<String> attributes) {
+	this.attributes = attributes;
+}
+
+
+public void setLinked_diseases(HashSet<String> linked_diseases) {
+	this.linked_diseases = linked_diseases;
 }
 }

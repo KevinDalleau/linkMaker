@@ -53,10 +53,15 @@ public class Main {
 	public static void main(String[] args) {
 		LinkedHashSet<DrugGenePair> pairs = getAssociatedPairs();
 		HashMap<String,String> drugStitchLinks = Drug.getPharmgkbIDStitchIDLinks();
-		System.out.println(drugStitchLinks.get("http://biodb.jp/mappings/pharmgkb_id/PA450651"));
+		HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
 		Iterator iterator = pairs.iterator();
 		while(iterator.hasNext()) {
-			System.out.println(iterator.next());
+		 DrugGenePair pair = (DrugGenePair) iterator.next();
+		 Gene gene = pair.getGene();
+		 Drug drug = pair.getDrug();
+		 gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
+		 
+		 System.out.println(pair.toString());
 		}
 		
 	}

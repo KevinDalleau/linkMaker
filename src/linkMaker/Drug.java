@@ -90,4 +90,28 @@ public class Drug {
 		return "Drug [pharmgkb_id=" + pharmgkb_id + ", attributes="
 				+ attributes + ", linked_diseases=" + linked_diseases + "]";
 	}
+
+	public String getPharmgkb_id() {
+		return pharmgkb_id;
+	}
+
+	public void setPharmgkb_id(String pharmgkb_id) {
+		this.pharmgkb_id = pharmgkb_id;
+	}
+
+	public ArrayList<String> getStitch_ids() {
+		return stitch_ids;
+	}
+
+	public void setStitch_ids(ArrayList<String> stitch_ids) {
+		this.stitch_ids = stitch_ids;
+	}
+
+	public void setAttributes(HashSet<String> attributes) {
+		this.attributes = attributes;
+	}
+
+	public void setLinked_diseases(HashSet<String> linked_diseases) {
+		this.linked_diseases = linked_diseases;
+	}
 	}
