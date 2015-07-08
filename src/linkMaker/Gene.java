@@ -1,5 +1,6 @@
 package linkMaker;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import com.hp.hpl.jena.query.Query;
@@ -16,8 +17,29 @@ public class Gene {
  HashSet<String> attributes;
  HashSet<String> linked_diseases;
 
+ public static HashMap<String,String> getPharmgkbIDEntrezIDLinks() {
+		HashMap<String,String> links = new HashMap<String, String>();
+		String queryLinks = "SELECT ?gene ?entrez_id\n" + 
+				"	WHERE\n" + 
+				"   {\n" + 
+				"	?gene <http://biodb.jp/mappings/to_entrez_id> ?entrez_id.\n" + 
+				"   FILTER regex(str(?gene), \"^http://biodb.jp/mappings/pharmgkb_id/\")";
+		
+		Query query = QueryFactory.create(queryLinks);
+		QueryExecution queryExec = QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/mappings/sparql", queryLinks);
+		ResultSet results = queryExec.execSelect();
+		while(results.hasNext()) {
+			QuerySolution solution = results.nextSolution();
+			RDFNode geneNode = solution.get("gene");
+			RDFNode entrezIdNode = solution.get("entrez_id");
+			links.put(geneNode.toString(), entrezIdNode.toString());
+		};
+		queryExec.close();
+		return links;
+	 	}
  
- public Gene(String pharmgkb_id, String entrez_id) {
+ 
+ public Gene(String pharmgkb_id) {
 	this.pharmgkb_id = pharmgkb_id;
 	this.entrez_id = entrez_id;
 	attributes = new HashSet<String>();
