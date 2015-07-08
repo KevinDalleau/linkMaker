@@ -1,6 +1,7 @@
 package linkMaker;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -53,7 +54,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		LinkedList<DrugGenePair> pairs = getAssociatedPairs();
-		HashMap<String,String> drugStitchLinks = Drug.getPharmgkbIDStitchIDLinks();
+		HashMap<String,ArrayList<String>> drugStitchLinks = Drug.getPharmgkbIDStitchIDLinks();
 		HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
 		Iterator iterator = pairs.iterator();
 		while(iterator.hasNext()) {
@@ -61,8 +62,11 @@ public class Main {
 		 Gene gene = pair.getGene();
 		 Drug drug = pair.getDrug();
 		 gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
+		 drug.setStitch_ids(drugStitchLinks.get(drug.getPharmgkb_id()));
 		}
-		System.out.println(pairs.get(0));
+		
+		System.out.println(pairs.toString());
+		
 		
 	}
 

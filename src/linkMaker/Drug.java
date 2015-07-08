@@ -18,15 +18,15 @@ public class Drug {
 	HashSet<String> attributes;
 	HashSet<String> linked_diseases;
 
-	 public static HashMap<String,String> getPharmgkbIDStitchIDLinks() {
-		HashMap<String,String> links = new HashMap<String, String>();
+	 public static HashMap<String,ArrayList<String>> getPharmgkbIDStitchIDLinks() {
+		HashMap<String,ArrayList<String>> links = new HashMap<String, ArrayList<String>>();
 		String queryLinks = "SELECT DISTINCT ?drug ?stitch_id\n" + 
-				"				WHERE \n" + 
-				"   {\n" + 
-				"	?drug <http://biodb.jp/mappings/to_c_id> ?stitch_id.\n" + 
-				"  FILTER regex(str(?drug), \"^http://biodb.jp/mappings/pharmgkb_id/\")\n" + 
-				"}\n" + 
-				"\n" + 
+				"		WHERE {\n" + 
+				"		?drug_uri <http://biodb.jp/mappings/to_c_id> ?stitch_id_uri.\n" + 
+				"		FILTER regex(str(?drug_uri), \"^http://biodb.jp/mappings/pharmgkb_id/\")\n" + 
+				"		BIND(REPLACE(str(?drug_uri), \"^http://biodb.jp/mappings/pharmgkb_id/\",\"\") AS ?drug)\n" + 
+				"		BIND(REPLACE(str(?stitch_id_uri), \"^http://biodb.jp/mappings/c_id/\",\"\") AS ?stitch_id)\n" + 
+				"		}\n" + 
 				"";
 		
 		Query query = QueryFactory.create(queryLinks);
@@ -36,7 +36,14 @@ public class Drug {
 			QuerySolution solution = results.nextSolution();
 			RDFNode drugNode = solution.get("drug");
 			RDFNode stitchIdNode = solution.get("stitch_id");
-			links.put(drugNode.toString(), stitchIdNode.toString());
+			if(links.get(drugNode.toString()) != null) {
+				links.get(drugNode.toString()).add(stitchIdNode.toString());
+			}
+			else {
+				ArrayList<String> stitchIds = new ArrayList<String>();
+				stitchIds.add(stitchIdNode.toString());
+				links.put(drugNode.toString(), stitchIds);
+			}
 		};
 		queryExec.close();
 		return links;
@@ -87,8 +94,9 @@ public class Drug {
 
 	@Override
 	public String toString() {
-		return "Drug [pharmgkb_id=" + pharmgkb_id + ", attributes="
-				+ attributes + ", linked_diseases=" + linked_diseases + "]";
+		return "Drug [pharmgkb_id=" + pharmgkb_id + ", stitch_ids="
+				+ stitch_ids + ", attributes=" + attributes
+				+ ", linked_diseases=" + linked_diseases + "]";
 	}
 
 	public String getPharmgkb_id() {
