@@ -33,7 +33,7 @@ public class Drug {
 
 	@Override
 	public String toString() {
-		return "Gene [pharmgkb_id=" + pharmgkb_id + ", attributes=" + attributes
+		return "Drug [pharmgkb_id=" + pharmgkb_id + ", attributes=" + attributes
 				+ ", linked_diseases=" + linked_diseases + "]";
 	}
 	}
