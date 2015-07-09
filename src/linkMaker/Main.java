@@ -33,7 +33,7 @@ public class Main {
 				"				?drug <http://pharmgkb.org/relationships/association> ?association. \n" + 
 				"				?association <http://pharmgkb.org/relationships/association_type> \"associated\"\n" + 
 				"				}";
-		Query query = QueryFactory.create(linksQuery);
+		
 		QueryExecution queryExec = QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/pharmgkbrelations/sparql", linksQuery);
 		ResultSet results = queryExec.execSelect();
 		LinkedList<DrugGenePair> pairs = new LinkedList<DrugGenePair>();
@@ -56,16 +56,18 @@ public class Main {
 		LinkedList<DrugGenePair> pairs = getAssociatedPairs();
 		HashMap<String,ArrayList<String>> drugStitchLinks = Drug.getPharmgkbIDStitchIDLinks();
 		HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
-		Iterator iterator = pairs.iterator();
+		HashMap<String,ArrayList<String>> geneAttributes = Gene.getGeneAttributes();
+		Iterator<DrugGenePair> iterator = pairs.iterator();
 		while(iterator.hasNext()) {
-		 DrugGenePair pair = (DrugGenePair) iterator.next();
+		 DrugGenePair pair = iterator.next();
 		 Gene gene = pair.getGene();
 		 Drug drug = pair.getDrug();
 		 gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
+		 gene.setAttributes(geneAttributes.get(gene.getEntrez_id()));
 		 drug.setStitch_ids(drugStitchLinks.get(drug.getPharmgkb_id()));
 		}
 		
-		System.out.println(pairs.toString());
+		System.out.println(pairs);
 		
 		
 	}

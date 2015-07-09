@@ -15,8 +15,8 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 public class Drug {
 	String pharmgkb_id;
 	ArrayList<String> stitch_ids; //Multiple stich_id for one pharmgkb_id : multiple salts
-	HashSet<String> attributes;
-	HashSet<String> linked_diseases;
+	ArrayList<String> attributes;
+	ArrayList<String> linked_diseases;
 
 	 public static HashMap<String,ArrayList<String>> getPharmgkbIDStitchIDLinks() {
 		HashMap<String,ArrayList<String>> links = new HashMap<String, ArrayList<String>>();
@@ -56,48 +56,6 @@ public class Drug {
 		linked_diseases = null;
 		
 	 }
-	
-	private ArrayList<String> setStitchId() {
-			ArrayList<String> stitch_ids= new ArrayList<String>();
-			String uri = "<http://biodb.jp/mappings/pharmgkb_id/"+this.pharmgkb_id+">";
-			String queryGeneAttributes = "SELECT ?stitch_id\n" + 
-					"WHERE {\n" + 
-					uri+" <http://biodb.jp/mappings/to_c_id> ?stitch_id\n" + 
-					"}\n";
-			Query query = QueryFactory.create(queryGeneAttributes);
-			QueryExecution queryExec = QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/disgenet/sparql", queryGeneAttributes);
-			ResultSet results = queryExec.execSelect();
-			while(results.hasNext()) {
-				QuerySolution solution = results.nextSolution();
-				RDFNode stitchIdNode = solution.get("stitch_id");
-				stitch_ids.add(stitchIdNode.toString());
-			}
-			queryExec.close();
-			return stitch_ids;
-			
-		}
-	public HashSet<String> getAttributes() {
-		return attributes;
-	}
-
-	public void addAttribute(String attribute) {
-		this.attributes.add(attribute);
-	}
-
-	public HashSet<String> getLinked_diseases() {
-		return linked_diseases;
-	}
-
-	public void addLinkedDiseases(String linked_disease) {
-		this.linked_diseases.add(linked_disease);
-	}
-
-	@Override
-	public String toString() {
-		return "Drug [pharmgkb_id=" + pharmgkb_id + ", stitch_ids="
-				+ stitch_ids + ", attributes=" + attributes
-				+ ", linked_diseases=" + linked_diseases + "]";
-	}
 
 	public String getPharmgkb_id() {
 		return pharmgkb_id;
@@ -115,11 +73,29 @@ public class Drug {
 		this.stitch_ids = stitch_ids;
 	}
 
-	public void setAttributes(HashSet<String> attributes) {
+	public ArrayList<String> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(ArrayList<String> attributes) {
 		this.attributes = attributes;
 	}
 
-	public void setLinked_diseases(HashSet<String> linked_diseases) {
+	public ArrayList<String> getLinked_diseases() {
+		return linked_diseases;
+	}
+
+	public void setLinked_diseases(ArrayList<String> linked_diseases) {
 		this.linked_diseases = linked_diseases;
 	}
+
+	@Override
+	public String toString() {
+		return "Drug [pharmgkb_id=" + pharmgkb_id + ", stitch_ids="
+				+ stitch_ids + ", attributes=" + attributes
+				+ ", linked_diseases=" + linked_diseases + "]";
 	}
+	
+	
+
+}
