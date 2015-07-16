@@ -103,7 +103,6 @@ public class Main {
 			gene.setEntrez_id(geneNode.toString());
 			Disease disease = new Disease(diseaseNode.toString());
 			GeneDiseasePair geneDiseasePair = new GeneDiseasePair(gene,disease);
-			geneDiseasePair.addTwoHopsLink(twoHopsLinksNode.toString());
 			if(geneDiseasesPairs.get(geneNode.toString()) != null) {
 				geneDiseasesPairs.get(geneNode.toString()).add(geneDiseasePair);
 			}
@@ -111,7 +110,6 @@ public class Main {
 				ArrayList<GeneDiseasePair> pair = new ArrayList<GeneDiseasePair>();
 				pair.add(geneDiseasePair);
 				geneDiseasesPairs.put(geneNode.toString(), pair);
-				
 			}
 		};
 		queryExec.close();

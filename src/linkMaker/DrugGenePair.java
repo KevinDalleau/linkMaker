@@ -112,7 +112,7 @@ public class DrugGenePair {
 			RDFNode twoHopsLinksNode = solution.get("2_hops_links1");
 			Disease disease = new Disease(diseaseNode.toString());
 			GeneDiseasePair geneDiseasePair = new GeneDiseasePair(this.getGene(),disease);
-			geneDiseasePair.addTwoHopsLink(twoHopsLinksNode.toString());
+			//geneDiseasePair.addTwoHopsLink(twoHopsLinksNode.toString());
 			geneDiseasePairs.add(geneDiseasePair);
 			
 		};

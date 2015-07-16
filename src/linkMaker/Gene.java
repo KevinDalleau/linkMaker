@@ -16,7 +16,6 @@ public class Gene {
  String pharmgkb_id;
  String entrez_id;
  ArrayList<String> attributes;
- ArrayList<String> linked_diseases;
 
  public static HashMap<String,String> getPharmgkbIDEntrezIDLinks() {
 		HashMap<String,String> links = new HashMap<String, String>();
@@ -105,7 +104,6 @@ public class Gene {
 	this.pharmgkb_id = pharmgkb_id;
 	this.entrez_id = "";
 	attributes = new ArrayList<String>();
-	linked_diseases = new ArrayList<String>();
 	
  }
  
@@ -113,7 +111,6 @@ public class Gene {
 	 this.pharmgkb_id = null;
 	 this.entrez_id = null;
 	 attributes = new ArrayList<String>();
-	 linked_diseases = new ArrayList<String>();
  }
 
 public String getPharmgkb_id() {
@@ -140,19 +137,12 @@ public void setAttributes(ArrayList<String> attributes) {
 	this.attributes = attributes;
 }
 
-public ArrayList<String> getLinked_diseases() {
-	return linked_diseases;
-}
 
-public void setLinked_diseases(ArrayList<String> linked_diseases) {
-	this.linked_diseases = linked_diseases;
-}
 
 @Override
 public String toString() {
 	return "Gene [pharmgkb_id=" + pharmgkb_id + ", entrez_id=" + entrez_id
-			+ ", attributes=" + attributes + ", linked_diseases="
-			+ linked_diseases + "]";
+			+ ", attributes=" + attributes + ", linked_diseases=]";
 }
 
 }

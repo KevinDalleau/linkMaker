@@ -1,16 +1,17 @@
 package linkMaker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GeneDiseasePair {
 	Gene gene;
 	Disease disease;
-	ArrayList<String> twoHopsLinks;
+	HashMap<GeneDiseasePair,ArrayList<String>> twoHopsLinks;
 	
 	public GeneDiseasePair(Gene gene, Disease disease) {
 		this.gene = gene;
 		this.disease = disease;
-		this.twoHopsLinks = new ArrayList<String>();
+		this.twoHopsLinks = new HashMap<GeneDiseasePair,ArrayList<String>>();
 	}
 
 	public Gene getGene() {
@@ -29,18 +30,14 @@ public class GeneDiseasePair {
 		this.disease = disease;
 	}
 
-	public ArrayList<String> getTwoHopsLinks() {
+	public HashMap<GeneDiseasePair,ArrayList<String>> getTwoHopsLinks() {
 		return twoHopsLinks;
 	}
 
-	public void setTwoHopsLinks(ArrayList<String> twoHopsLinks) {
+	public void setTwoHopsLinks(HashMap<GeneDiseasePair,ArrayList<String>> twoHopsLinks) {
 		this.twoHopsLinks = twoHopsLinks;
 	}
 	
-	public void addTwoHopsLink(String twoHopsLink) {
-		this.twoHopsLinks.add(twoHopsLink);
-	}
-
 	@Override
 	public String toString() {
 		return "GeneDiseasePair [gene=" + gene + ", disease=" + disease
