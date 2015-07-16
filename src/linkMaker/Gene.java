@@ -108,6 +108,13 @@ public class Gene {
 	linked_diseases = new ArrayList<String>();
 	
  }
+ 
+ public Gene() {
+	 this.pharmgkb_id = null;
+	 this.entrez_id = null;
+	 attributes = new ArrayList<String>();
+	 linked_diseases = new ArrayList<String>();
+ }
 
 public String getPharmgkb_id() {
 	return pharmgkb_id;
