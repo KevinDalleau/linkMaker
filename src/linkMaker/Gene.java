@@ -142,7 +142,7 @@ public void setAttributes(ArrayList<String> attributes) {
 @Override
 public String toString() {
 	return "Gene [pharmgkb_id=" + pharmgkb_id + ", entrez_id=" + entrez_id
-			+ ", attributes=" + attributes + ", linked_diseases=]";
+			+ ", attributes=" + attributes + "";
 }
 
 }

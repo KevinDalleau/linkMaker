@@ -11,4 +11,12 @@ public class Disease {
 	public String toString() {
 		return "Disease [cui=" + cui + "]";
 	}
+
+	public String getCui() {
+		return cui;
+	}
+
+	public void setCui(String cui) {
+		this.cui = cui;
+	}
 }

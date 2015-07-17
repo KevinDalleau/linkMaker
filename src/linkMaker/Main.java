@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -21,6 +22,33 @@ public class Main {
 	public static String stripURI(String in) {
 		return in.replaceAll("(.*)/", "");
 	}; 
+
+	
+	
+	
+	public static void main(String[] args) {
+		
+				
+		LinkedList<DrugGenePair> pairs = getAssociatedPairs();
+		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = getGeneDiseasesPairs();
+		HashMap<String,ArrayList<String>> drugStitchLinks = Drug.getPharmgkbIDStitchIDLinks();
+		HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
+		HashMap<String,ArrayList<String>> geneAttributes = Gene.getGeneAttributes();
+		Iterator<DrugGenePair> iterator = pairs.iterator();
+		while(iterator.hasNext()) {
+		 DrugGenePair pair = iterator.next();
+		 Gene gene = pair.getGene();
+		 Drug drug = pair.getDrug();
+		 gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
+		 gene.setAttributes(geneAttributes.get(gene.getEntrez_id()));
+		 drug.setStitch_ids(drugStitchLinks.get(drug.getPharmgkb_id()));
+
+		}
+		 System.out.println(geneDiseasePairs.get("2316"));
+
+		
+		
+	}
 	
 	public static LinkedList<DrugGenePair> getAssociatedPairs() {
 		String linksQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" + 
@@ -88,7 +116,6 @@ public class Main {
 				"    BIND((replace(str(?disease_uri), \"http://linkedlifedata.com/resource/umls/id/\", \"\")) AS ?disease)\n" + 
 				"}\n" + 
 				"";
-		Query query = QueryFactory.create(queryLinks);
 		
 		QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/disgenet/sparql", queryLinks);
 		queryExec.addParam("timeout","3600000");
@@ -103,11 +130,22 @@ public class Main {
 			gene.setEntrez_id(geneNode.toString());
 			Disease disease = new Disease(diseaseNode.toString());
 			GeneDiseasePair geneDiseasePair = new GeneDiseasePair(gene,disease);
-			if(geneDiseasesPairs.get(geneNode.toString()) != null) {
-				geneDiseasesPairs.get(geneNode.toString()).add(geneDiseasePair);
+			ArrayList<GeneDiseasePair> associatedPairs = geneDiseasesPairs.get(geneNode.toString());
+			if(associatedPairs != null ) { // Test if a given gene id already has been associated with one or more gene-diseases pair(s)
+				int indexOfPair = GeneDiseasePair.containsGeneDiseasePair(associatedPairs, geneDiseasePair);
+				System.out.println(indexOfPair);
+				if(indexOfPair == -1) {
+					geneDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());
+					associatedPairs.add(geneDiseasePair);
+				}
+				else {
+					associatedPairs.get(indexOfPair).addTwoHopsLinks(twoHopsLinksNode.toString());
+				}
+				
 			}
 			else {
 				ArrayList<GeneDiseasePair> pair = new ArrayList<GeneDiseasePair>();
+				geneDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());
 				pair.add(geneDiseasePair);
 				geneDiseasesPairs.put(geneNode.toString(), pair);
 			}
@@ -116,32 +154,6 @@ public class Main {
 		return geneDiseasesPairs;
 	}
 	
-	public static void main(String[] args) {
-		LinkedList<DrugGenePair> pairs = getAssociatedPairs();
-		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = getGeneDiseasesPairs();
-		HashMap<String,ArrayList<String>> drugStitchLinks = Drug.getPharmgkbIDStitchIDLinks();
-//		HashMap<Integer, ArrayList<String>> drugDiseasesLinks_sider = Drug.getStitchID_disease_links();
-		HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
-		HashMap<String,ArrayList<String>> geneAttributes = Gene.getGeneAttributes();
-		Iterator<DrugGenePair> iterator = pairs.iterator();
-		while(iterator.hasNext()) {
-		 DrugGenePair pair = iterator.next();
-		 Gene gene = pair.getGene();
-		 Drug drug = pair.getDrug();
-		 gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
-		 gene.setAttributes(geneAttributes.get(gene.getEntrez_id()));
-		 drug.setStitch_ids(drugStitchLinks.get(drug.getPharmgkb_id()));
-//		 LinkedList<DrugDiseasePair> drugDiseasePair = null;
-
-//		 if(pair.getGene().getEntrez_id() != null) {
-//			 pair.add_undirect_link_clinvar();
-//		 }
-		}
-		 System.out.println(geneDiseasePairs.get("2316"));
-
-		
-		
-	}
 
 	
 }
