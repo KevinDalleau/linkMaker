@@ -33,7 +33,7 @@ public class Main {
 		Mapper mapper = new Mapper();
 		
 		LinkedList<DrugGenePair> pairs = getAssociatedPairs();
-//		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = getGeneDiseasesPairs();
+		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = getGeneDiseasesPairs();
 //		HashMap<String, ArrayList<DrugDiseasePair>> drugDiseasePairs = getDrugDiseasesPairs();
 		HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
 		HashMap<String,ArrayList<String>> geneAttributes = Gene.getGeneAttributes();
@@ -47,11 +47,9 @@ public class Main {
 		 drug.setStitch_ids(mapper.getStitch_from_PharmGKB(drug.getPharmgkb_id()));
 
 		}
-		 System.out.println(pairs);
 		
-		
-		
-		
+		System.out.println(geneDiseasePairs);
+		 
 	}
 	
 	public static LinkedList<DrugGenePair> getAssociatedPairs() {
@@ -87,6 +85,7 @@ public class Main {
 	}
 	
 	public static HashMap<String, ArrayList<GeneDiseasePair>> getGeneDiseasesPairs() {
+		Mapper mapper = new Mapper();
 		HashMap<String, ArrayList<GeneDiseasePair>> geneDiseasesPairs = new HashMap<String, ArrayList<GeneDiseasePair>>();
 		String queryLinks = "PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
 				"PREFIX  foaf: <http://xmlns.com/foaf/0.1/>\n" + 
@@ -133,12 +132,13 @@ public class Main {
 			Gene gene = new Gene();
 			gene.setEntrez_id(geneNode.toString());
 			Disease disease = new Disease(diseaseNode.toString());
+			disease.setPharmgkbid(mapper.getPharmGKB_from_UMLS(disease.getCui()));
 			GeneDiseasePair geneDiseasePair = new GeneDiseasePair(gene,disease);
 			ArrayList<GeneDiseasePair> associatedPairs = geneDiseasesPairs.get(geneNode.toString());
 			if(associatedPairs != null ) { // Test if a given gene id already has been associated with one or more gene-diseases pair(s)
 				int indexOfPair = GeneDiseasePair.containsGeneDiseasePair(associatedPairs, geneDiseasePair);
 				System.out.println(indexOfPair);
-				if(indexOfPair == -1) {
+				if(indexOfPair == -1) { //If the pair has not been associated to the gene
 					geneDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());
 					associatedPairs.add(geneDiseasePair);
 				}
