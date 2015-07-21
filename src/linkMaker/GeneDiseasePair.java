@@ -19,8 +19,6 @@ public class GeneDiseasePair {
 	public static int containsGeneDiseasePair(List<GeneDiseasePair> haystack, GeneDiseasePair needle) {
 		int index = 0;
 		for (GeneDiseasePair pair : haystack) {
-//			System.out.println("Pair gene " + pair.getGene().getEntrez_id() + "Needle gene "+ needle.getGene().getEntrez_id()+ " Pair disease" + pair.getDisease().getCui() + " Pair disease "+needle.getDisease().getCui());
-
 			if(pair.getGene().getEntrez_id().equals(needle.getGene().getEntrez_id()) && pair.getDisease().getCui().equals(needle.getDisease().getCui())) {
 				return index;
 			}

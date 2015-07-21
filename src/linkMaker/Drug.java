@@ -18,37 +18,6 @@ public class Drug {
 	ArrayList<String> stitch_ids; //Multiple stich_id for one pharmgkb_id : multiple salts
 	ArrayList<String> attributes;
 	ArrayList<String> linked_diseases;
-
-	 public static HashMap<String,ArrayList<String>> getPharmgkbIDStitchIDLinks() {
-		HashMap<String,ArrayList<String>> links = new HashMap<String, ArrayList<String>>();
-		String queryLinks = "SELECT DISTINCT ?drug ?stitch_id\n" + 
-				"		WHERE {\n" + 
-				"		?drug_uri <http://biodb.jp/mappings/to_c_id> ?stitch_id_uri.\n" + 
-				"		FILTER regex(str(?drug_uri), \"^http://biodb.jp/mappings/pharmgkb_id/\")\n" + 
-				"		BIND(REPLACE(str(?drug_uri), \"^http://biodb.jp/mappings/pharmgkb_id/\",\"\") AS ?drug)\n" + 
-				"		BIND(REPLACE(str(?stitch_id_uri), \"^http://biodb.jp/mappings/c_id/\",\"\") AS ?stitch_id)\n" + 
-				"		}\n" + 
-				"";
-		
-		Query query = QueryFactory.create(queryLinks);
-		QueryExecution queryExec = QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/mappings/sparql", queryLinks);
-		ResultSet results = queryExec.execSelect();
-		while(results.hasNext()) {
-			QuerySolution solution = results.nextSolution();
-			RDFNode drugNode = solution.get("drug");
-			RDFNode stitchIdNode = solution.get("stitch_id");
-			if(links.get(drugNode.toString()) != null) {
-				links.get(drugNode.toString()).add(stitchIdNode.toString());
-			}
-			else {
-				ArrayList<String> stitchIds = new ArrayList<String>();
-				stitchIds.add(stitchIdNode.toString());
-				links.put(drugNode.toString(), stitchIds);
-			}
-		};
-		queryExec.close();
-		return links;
-	 	}
 	 
 	 public static HashMap<Integer,ArrayList<String>> getStitchID_disease_links() {
 			HashMap<Integer,ArrayList<String>> links = new HashMap<Integer, ArrayList<String>>();

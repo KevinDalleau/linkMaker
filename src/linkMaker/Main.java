@@ -17,6 +17,8 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
+import fr.kevindalleau.Mapper.Mapper;
+
 
 public class Main {
 	public static String stripURI(String in) {
@@ -28,10 +30,11 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-				
+		Mapper mapper = new Mapper();
+		
 		LinkedList<DrugGenePair> pairs = getAssociatedPairs();
-		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = getGeneDiseasesPairs();
-		HashMap<String,ArrayList<String>> drugStitchLinks = Drug.getPharmgkbIDStitchIDLinks();
+//		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = getGeneDiseasesPairs();
+//		HashMap<String, ArrayList<DrugDiseasePair>> drugDiseasePairs = getDrugDiseasesPairs();
 		HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
 		HashMap<String,ArrayList<String>> geneAttributes = Gene.getGeneAttributes();
 		Iterator<DrugGenePair> iterator = pairs.iterator();
@@ -41,11 +44,12 @@ public class Main {
 		 Drug drug = pair.getDrug();
 		 gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
 		 gene.setAttributes(geneAttributes.get(gene.getEntrez_id()));
-		 drug.setStitch_ids(drugStitchLinks.get(drug.getPharmgkb_id()));
+		 drug.setStitch_ids(mapper.getStitch_from_PharmGKB(drug.getPharmgkb_id()));
 
 		}
-		 System.out.println(geneDiseasePairs.get("2316"));
-
+		 System.out.println(pairs);
+		
+		
 		
 		
 	}
@@ -152,6 +156,46 @@ public class Main {
 		};
 		queryExec.close();
 		return geneDiseasesPairs;
+	}
+	
+	public static HashMap<String, ArrayList<DrugDiseasePair>> getDrugDiseasesPairs() {
+		HashMap<String, ArrayList<DrugDiseasePair>> drugDiseasesPairs = new HashMap<String, ArrayList<DrugDiseasePair>>();
+		String queryLinks = "";
+		
+		QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/disgenet/sparql", queryLinks);
+		queryExec.addParam("timeout","3600000");
+
+		ResultSet results = queryExec.execSelect();
+		while(results.hasNext()) {
+			QuerySolution solution = results.nextSolution();
+			RDFNode drugNode = solution.get("drug");
+			RDFNode diseaseNode = solution.get("disease");
+			RDFNode twoHopsLinksNode = solution.get("2_hops_links1");
+			Drug drug = new Drug(drugNode.toString());
+			Disease disease = new Disease(diseaseNode.toString());
+			DrugDiseasePair drugDiseasePair = new DrugDiseasePair(drug,disease);
+			ArrayList<DrugDiseasePair> associatedPairs = drugDiseasesPairs.get(drugNode.toString());
+			if(associatedPairs != null ) { // Test if a given gene id already has been associated with one or more gene-diseases pair(s)
+				int indexOfPair = DrugDiseasePair.containsDrugDiseasePair(associatedPairs, drugDiseasePair);
+				System.out.println(indexOfPair);
+				if(indexOfPair == -1) {
+					drugDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());
+					associatedPairs.add(drugDiseasePair);
+				}
+				else {
+					associatedPairs.get(indexOfPair).addTwoHopsLinks(twoHopsLinksNode.toString());
+				}
+				
+			}
+			else {
+				ArrayList<DrugDiseasePair> pair = new ArrayList<DrugDiseasePair>();
+				drugDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());
+				pair.add(drugDiseasePair);
+				drugDiseasesPairs.put(drugNode.toString(), pair);
+			}
+		};
+		queryExec.close();
+		return drugDiseasesPairs;
 	}
 	
 
