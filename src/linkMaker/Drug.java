@@ -67,6 +67,13 @@ public class Drug {
 		linked_diseases = null;
 		
 	 }
+	 
+	 public Drug() {
+		 this.pharmgkb_id = "";
+		 this.stitch_ids = null;
+		 attributes = null;
+		 linked_diseases = null;
+	 }
 
 	public String getPharmgkb_id() {
 		return pharmgkb_id;

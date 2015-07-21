@@ -17,8 +17,10 @@ public class DrugDiseasePair {
 	public static int containsDrugDiseasePair(List<DrugDiseasePair> haystack, DrugDiseasePair needle) {
 		int index = 0;
 		for (DrugDiseasePair pair : haystack) {
-			if(pair.getDrug().getPharmgkb_id().equals(needle.getDrug().getPharmgkb_id()) && pair.getDisease().getCui().equals(needle.getDisease().getCui())) {
-				return index;
+			if(pair.getDrug().getPharmgkb_id() != null && needle.getDrug().getPharmgkb_id() !=null) {
+				if(pair.getDrug().getPharmgkb_id().equals(needle.getDrug().getPharmgkb_id()) && pair.getDisease().getCui().equals(needle.getDisease().getCui())) {
+					return index;
+				}
 			}
 			index++;
 		}
