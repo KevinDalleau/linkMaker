@@ -24,6 +24,6 @@
 	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.7.6.jar"/>
 	<classpathentry kind="lib" path="lib/xercesImpl-2.11.0.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis-1.4.01.jar"/>
-	<classpathentry kind="lib" path="/Users/kevindalleau/Dev/pidr/apache-jena-2.13.0/lib/mapper-0.0.1.jar"/>
+	<classpathentry kind="lib" path="/home/kevin/Dev/pidr/linkMaker/lib/mapper-0.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
