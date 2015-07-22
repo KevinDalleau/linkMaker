@@ -28,7 +28,7 @@ public class Main {
 		
 		LinkedList<DrugGenePair> pairs = DrugGenePair.getAssociatedPairs();
 		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = GeneDiseasePair.getGeneDiseasesPairs();
-		HashMap<String, ArrayList<DrugDiseasePair>> drugDiseasePairs = DrugDiseasePair.getDrugDiseasesPairs();
+//		HashMap<String, ArrayList<DrugDiseasePair>> drugDiseasePairs = DrugDiseasePair.getDrugDiseasesPairs();
 		HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
 		HashMap<String,ArrayList<String>> geneAttributes = Gene.getGeneAttributes();
 		Iterator<DrugGenePair> iterator = pairs.iterator();
@@ -42,12 +42,10 @@ public class Main {
 
 		}
 		
-		System.out.println(drugDiseasePairs.toString());
+		System.out.println(geneDiseasePairs.size());
 		 
 	}
 	
-	public static String stripURI(String in) {
-		return in.replaceAll("(.*)/", "");
-	}; 
+	
 		
 }
