@@ -79,5 +79,34 @@ public class Query {
 			return null;
 		}
 	}
+	
+	public ResultSet getDrugDiseaseRelations(String source) {
+		if (source.equals("medispan")) {
+			String queryLinks = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" + 
+				"SELECT ?drug ?2_hops_links2 ?disease\n" + 
+				"WHERE {\n" + 
+				"  ?drug_uri ?2_hops_links2_uri ?disease_uri.\n" + 
+				"  ?drug_uri rdf:type <http://orpailleur.fr/medispan/drug>.\n" + 
+				"  ?disease_uri rdf:type <http://orpailleur.fr/medispan/event>\n" + 
+				"    BIND(REPLACE(str(?drug_uri), \"http://orpailleur.fr/medispan/\",\"\") AS ?drug)\n" + 
+				"    BIND(REPLACE(str(?disease_uri), \"http://orpailleur.fr/medispan/\",\"\") AS ?disease)\n" + 
+				"  BIND(REPLACE(str(?2_hops_links2_uri), \"http://orpailleur.fr/medispan/\", \"\") AS ?2_hops_links2)}\n";
+			
+			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/medispan/sparql", queryLinks);
+			queryExec.addParam("timeout","3600000");
+			return queryExec.execSelect();
+		}
+		else if (source.equals("sider")) {
+			String queryLinks = "";
+			
+			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/sider/sparql", queryLinks);
+			queryExec.addParam("timeout","3600000");
+			return queryExec.execSelect();
+			
+		}
+		else {
+			return null;
+		}
+	}
 
 }
