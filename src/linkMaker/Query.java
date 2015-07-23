@@ -97,7 +97,23 @@ public class Query {
 			return queryExec.execSelect();
 		}
 		else if (source.equals("sider")) {
-			String queryLinks = "";
+			String queryLinks = "SELECT ?stitch_id ?2_hops_links_2 ?disease\n" + 
+					"					WHERE { \n" + 
+					"					  { \n" + 
+					"					   	?a <http://bio2rdf.org/sider_vocabulary:stitch-flat-compound-id> ?stitch_id_uri. \n" + 
+					"					    ?a <http://bio2rdf.org/sider_vocabulary:side-effect> ?disease_uri\n" + 
+					"     					  BIND(\"side-effect\" AS ?2_hops_links_2)\n" + 
+					"					      BIND(REPLACE(str(?stitch_id_uri), \"http://bio2rdf.org/stitch:\",\"\") AS ?stitch_id) \n" + 
+					"					      BIND(REPLACE(str(?disease_uri), \"http://bio2rdf.org/umls:\",\"\") AS ?disease) \n" + 
+					"					  } \n" + 
+					"					  UNION { \n" + 
+					"					   ?a <http://bio2rdf.org/sider_vocabulary:stitch-flat-compound-id> ?stitch_id_uri. \n" + 
+					"					   ?a <http://bio2rdf.org/sider_vocabulary:indication> ?disease_uri\n" + 
+					"      					  BIND(\"indication\" AS ?2_hops_links_2)\n" + 
+					"					      BIND(REPLACE(str(?stitch_id_uri), \"http://bio2rdf.org/stitch:\",\"\") AS ?stitch_id) \n" + 
+					"    					  BIND(REPLACE(str(?disease_uri), \"http://bio2rdf.org/umls:\",\"\") AS ?disease) \n" + 
+					"					  } \n" + 
+					"					}\n";
 			
 			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/sider/sparql", queryLinks);
 			queryExec.addParam("timeout","3600000");
