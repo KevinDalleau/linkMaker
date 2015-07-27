@@ -132,6 +132,7 @@ public class GeneDiseasePair {
 			RDFNode twoHopsLinksNode = solution.get("2_hops_links1");
 			Gene gene = new Gene();
 			gene.setEntrez_id(geneNode.toString());
+			
 			Disease disease = new Disease(diseaseNode.toString());
 			GeneDiseasePair geneDiseasePair = new GeneDiseasePair(gene,disease);
 			ArrayList<GeneDiseasePair> associatedPairs = geneDiseasesPairs.get(geneNode.toString());

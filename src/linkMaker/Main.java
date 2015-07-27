@@ -25,11 +25,12 @@ public class Main {
 	public static void main(String[] args) {
 		
 		Mapper mapper = new Mapper();
-		
 		LinkedList<DrugGenePair> pairs = DrugGenePair.getAssociatedPairs();
-		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = GeneDiseasePair.getGeneDiseasesPairs();
+//		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = GeneDiseasePair.getGeneDiseasesPairs();
 //		HashMap<String, ArrayList<DrugDiseasePair>> drugDiseasePairs = DrugDiseasePair.getDrugDiseasesPairs();
 		HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
+//		System.out.println(drugDiseasePairs);
+
 		HashMap<String,ArrayList<String>> geneAttributes = Gene.getGeneAttributes();
 		Iterator<DrugGenePair> iterator = pairs.iterator();
 		while(iterator.hasNext()) {
@@ -39,10 +40,23 @@ public class Main {
 		 gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
 		 gene.setAttributes(geneAttributes.get(gene.getEntrez_id()));
 		 drug.setStitch_ids(mapper.getStitch_from_PharmGKB(drug.getPharmgkb_id()));
+//		 ArrayList<GeneDiseasePair> geneDiseasesPairs = geneDiseasePairs.get(gene.getEntrez_id());
+		 ArrayList<DrugDiseasePair> drugDiseasesPairs = DrugDiseasePair.getDrugDiseasesPairs(drug);
+		 System.out.println(drugDiseasesPairs);
+//		 System.out.println(drug.getStitch_ids());
+//		 System.out.println(drug.getPharmgkb_id());
+//		 System.out.println(mapper.getUMLS_from_PharmGKB(drug.getPharmgkb_id()));
+//		 if(drugDiseasePairs.get(mapper.getUMLS_from_PharmGKB(drug.getPharmgkb_id())) != null) {
+//			 System.out.println(drug.getPharmgkb_id());
+//			 System.out.println(mapper.getUMLS_from_PharmGKB(drug.getPharmgkb_id()));
+//			 ArrayList<DrugDiseasePair> drugDiseasesPairs = drugDiseasePairs.get(mapper.getUMLS_from_PharmGKB(drug.getPharmgkb_id()));
+//			 System.out.println(drugDiseasesPairs.toString());
+//		 }
+		 
 
-		}
+		 
 		
-		System.out.println(geneDiseasePairs.size());
+		}
 		 
 	}
 	

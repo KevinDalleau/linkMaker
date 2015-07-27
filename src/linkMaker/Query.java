@@ -1,11 +1,16 @@
 package linkMaker;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 public class Query {
 	
+	private String stitchValues;
+
 	public ResultSet getGeneDiseaseRelations(String source) {
 		if (source.equals("disgenet")) {
 			String queryLinks = "PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
@@ -78,6 +83,45 @@ public class Query {
 		else {
 			return null;
 		}
+	}
+	public ResultSet getDrugDiseaseRelationsFromSider(Drug drug) {
+		if(drug.getStitch_ids() !=null) {
+			ArrayList<String> stitchIds = drug.getStitch_ids();
+			stitchValues = "";
+			for(int i=0; i < stitchIds.size(); i++) {
+				stitchValues += "(<http://bio2rdf.org/stitch:-".concat(Integer.toString((Integer.parseInt(stitchIds.get(i))+100000000))).concat(">)");
+			}
+			System.out.println(stitchValues);
+			
+			String queryLinks = "SELECT ?stitch_id ?2_hops_links_2 ?disease\n" + 
+					"WHERE {\n" + 
+					"  {\n" + 
+					"  VALUES(?stitch_id_uri) {\n" + 
+					stitchValues +
+					"    }\n" + 
+					"  ?a <http://bio2rdf.org/sider_vocabulary:stitch-flat-compound-id> ?stitch_id_uri.\n" + 
+					"  ?a <http://bio2rdf.org/sider_vocabulary:side-effect> ?disease_uri\n" + 
+					"  BIND(\"side-effect\" AS ?2_hops_links_2)\n" + 
+					"  BIND(REPLACE(str(?stitch_id_uri), \"http://bio2rdf.org/stitch:\",\"\") AS ?stitch_id)\n" + 
+					"  BIND(REPLACE(str(?disease_uri), \"http://bio2rdf.org/umls:\",\"\") AS ?disease)\n" + 
+					"  }\n" + 
+					"  UNION {\n" + 
+					"     VALUES(?stitch_id_uri) {\n" + 
+					stitchValues +
+					"     }\n" + 
+					"  ?a <http://bio2rdf.org/sider_vocabulary:stitch-flat-compound-id> ?stitch_id_uri.\n" + 
+					"  ?a <http://bio2rdf.org/sider_vocabulary:indication> ?disease_uri.\n" + 
+					"  BIND(\"indication\" AS ?2_hops_links_2)\n" + 
+					"  BIND(REPLACE(str(?stitch_id_uri), \"http://bio2rdf.org/stitch:\",\"\") AS ?stitch_id)\n" + 
+					"  BIND(REPLACE(str(?disease_uri), \"http://bio2rdf.org/umls:\",\"\") AS ?disease)\n" + 
+					"  }}\n" + 
+					"";
+				QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/sider/sparql", queryLinks);
+				queryExec.addParam("timeout","3600000");
+				return queryExec.execSelect();
+		}
+		else return null;
+		
 	}
 	
 	public ResultSet getDrugDiseaseRelations(String source) {
