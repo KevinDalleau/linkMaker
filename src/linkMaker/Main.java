@@ -42,7 +42,7 @@ public class Main {
 		 drug.setStitch_ids(mapper.getStitch_from_PharmGKB(drug.getPharmgkb_id()));
 //		 ArrayList<GeneDiseasePair> geneDiseasesPairs = geneDiseasePairs.get(gene.getEntrez_id());
 		 ArrayList<DrugDiseasePair> drugDiseasesPairs = DrugDiseasePair.getDrugDiseasesPairs(drug);
-		 System.out.println(drugDiseasesPairs);
+//		 System.out.println(drugDiseasesPairs.get(0).toString());
 //		 System.out.println(drug.getStitch_ids());
 //		 System.out.println(drug.getPharmgkb_id());
 //		 System.out.println(mapper.getUMLS_from_PharmGKB(drug.getPharmgkb_id()));

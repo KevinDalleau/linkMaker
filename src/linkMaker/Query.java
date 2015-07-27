@@ -91,7 +91,6 @@ public class Query {
 			for(int i=0; i < stitchIds.size(); i++) {
 				stitchValues += "(<http://bio2rdf.org/stitch:-".concat(Integer.toString((Integer.parseInt(stitchIds.get(i))+100000000))).concat(">)");
 			}
-			System.out.println(stitchValues);
 			
 			String queryLinks = "SELECT ?stitch_id ?2_hops_links_2 ?disease\n" + 
 					"WHERE {\n" + 

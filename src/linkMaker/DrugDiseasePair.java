@@ -78,6 +78,7 @@ public class DrugDiseasePair {
 				RDFNode diseaseNode = solution.get("disease");
 				Disease disease= new Disease(diseaseNode.toString());
 				DrugDiseasePair drugDiseasePair = new DrugDiseasePair(drug,disease);
+				System.out.println(drugDiseasePair.toString());
 				drugDiseasesPairs.add(drugDiseasePair);
 			}
 		}
@@ -154,6 +155,12 @@ public class DrugDiseasePair {
 //		};
 	
 		return drugDiseasesPairs;
+	}
+
+	@Override
+	public String toString() {
+		return "DrugDiseasePair [drug=" + drug + ", disease=" + disease
+				+ ", twoHopsLinks=" + twoHopsLinks + "]";
 	}
 	
 }
