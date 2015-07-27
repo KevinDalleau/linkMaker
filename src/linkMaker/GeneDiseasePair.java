@@ -124,6 +124,7 @@ public class GeneDiseasePair {
 				geneDiseasesPairs.put(geneNode.toString(), pair);
 			}
 		};
+		System.out.println("Clinvar data for gene-disease links stored");
 		
 		while(disgenet.hasNext()) {
 			QuerySolution solution = disgenet.nextSolution();
@@ -154,6 +155,7 @@ public class GeneDiseasePair {
 				geneDiseasesPairs.put(geneNode.toString(), pair);
 			}
 		};
+		System.out.println("Disgenet data for gene-disease links stored");
 		
 		
 		return geneDiseasesPairs;

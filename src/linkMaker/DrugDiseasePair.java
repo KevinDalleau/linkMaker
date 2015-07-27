@@ -68,16 +68,18 @@ public class DrugDiseasePair {
 	}
 	public static ArrayList<DrugDiseasePair> getDrugDiseasesPairs(Drug drug) {
 		Mapper mapper = new Mapper();
-		ArrayList<DrugDiseasePair> drugDiseasesPairs = new ArrayList<DrugDiseasePair>();
+		System.out.println("Diseases linked to " + drug.toString());
+		ArrayList<DrugDiseasePair> drugDiseasesPairs = new ArrayList<DrugDiseasePair>(10000);
 		Query query = new Query();
 		if(query.getDrugDiseaseRelationsFromSider(drug) != null) {
 			ResultSet Sider = query.getDrugDiseaseRelationsFromSider(drug);
 			while(Sider.hasNext()) {
 				QuerySolution solution = Sider.nextSolution();
-				RDFNode twoHopsLinksNode = solution.get("2_hops_links2");
+				RDFNode twoHopsLinksNode = solution.get("2_hops_links_2");
 				RDFNode diseaseNode = solution.get("disease");
 				Disease disease= new Disease(diseaseNode.toString());
 				DrugDiseasePair drugDiseasePair = new DrugDiseasePair(drug,disease);
+				drugDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());;
 				System.out.println(drugDiseasePair.toString());
 				drugDiseasesPairs.add(drugDiseasePair);
 			}
