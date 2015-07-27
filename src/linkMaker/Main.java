@@ -3,6 +3,7 @@ package linkMaker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -26,7 +27,8 @@ public class Main {
 		
 		Mapper mapper = new Mapper();
 		LinkedList<DrugGenePair> pairs = DrugGenePair.getAssociatedPairs();
-		LinkedList<GeneDiseasePair> finalGeneDiseasePairs = new LinkedList<GeneDiseasePair>();
+		HashSet<GeneDiseasePair> finalGeneDiseasePairs = new HashSet<GeneDiseasePair>();
+		HashSet<DrugDiseasePair> finalDrugDiseasePairs = new HashSet<DrugDiseasePair>();
 		System.out.println("Number of known pairs : "+ pairs.size());
 		
 		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = GeneDiseasePair.getGeneDiseasesPairs();
@@ -47,14 +49,13 @@ public class Main {
 		 if(geneDiseasesPairs != null) {
 			 finalGeneDiseasePairs.addAll(geneDiseasesPairs);
 		 }
-		 
 		 ArrayList<DrugDiseasePair> drugDiseasesPairs = DrugDiseasePair.getDrugDiseasesPairs(drug);
-
-		 
-
-		 
-		
+		 if(drugDiseasesPairs != null) {
+			 finalDrugDiseasePairs.addAll(drugDiseasesPairs);
+		 }
 		}
+		System.out.println(finalGeneDiseasePairs.size()+ " gene-disease pairs found");
+		System.out.println(finalDrugDiseasePairs.size()+ " drug-disease pairs found");
 		 
 	}
 	

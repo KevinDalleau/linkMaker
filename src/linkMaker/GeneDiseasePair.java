@@ -78,15 +78,35 @@ public class GeneDiseasePair {
 		int result = 1;
 		result = prime * result + ((disease == null) ? 0 : disease.hashCode());
 		result = prime * result + ((gene == null) ? 0 : gene.hashCode());
+		result = prime * result + ((twoHopsLinks == null) ? 0 : twoHopsLinks.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		GeneDiseasePair other = (GeneDiseasePair) obj;
-		return this.disease.cui.equals(other.disease.cui) && this.gene.entrez_id.equals(other.gene.entrez_id);
-	
+		if (disease == null) {
+			if (other.disease != null)
+				return false;
+		} else if (!disease.equals(other.disease))
+			return false;
+		if (gene == null) {
+			if (other.gene != null)
+				return false;
+		} else if (!gene.equals(other.gene))
+			return false;
+		if (twoHopsLinks == null) {
+			if (other.twoHopsLinks != null)
+				return false;
+		} else if (!twoHopsLinks.equals(other.twoHopsLinks))
+			return false;
+		return true;
 	}
 	
 	public static HashMap<String, ArrayList<GeneDiseasePair>> getGeneDiseasesPairs() {

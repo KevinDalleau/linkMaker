@@ -60,7 +60,44 @@ public class Drug {
 			
 	 }
 	 
-	 public Drug(String pharmgkb_id) {
+	 @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
+		result = prime * result + ((pharmgkb_id == null) ? 0 : pharmgkb_id.hashCode());
+		result = prime * result + ((stitch_ids == null) ? 0 : stitch_ids.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Drug other = (Drug) obj;
+		if (attributes == null) {
+			if (other.attributes != null)
+				return false;
+		} else if (!attributes.equals(other.attributes))
+			return false;
+		if (pharmgkb_id == null) {
+			if (other.pharmgkb_id != null)
+				return false;
+		} else if (!pharmgkb_id.equals(other.pharmgkb_id))
+			return false;
+		if (stitch_ids == null) {
+			if (other.stitch_ids != null)
+				return false;
+		} else if (!stitch_ids.equals(other.stitch_ids))
+			return false;
+		return true;
+	}
+
+	public Drug(String pharmgkb_id) {
 		this.pharmgkb_id = pharmgkb_id;
 		this.stitch_ids = null;;
 		attributes = null;

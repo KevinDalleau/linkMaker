@@ -80,13 +80,52 @@ public class DrugDiseasePair {
 				Disease disease= new Disease(diseaseNode.toString());
 				DrugDiseasePair drugDiseasePair = new DrugDiseasePair(drug,disease);
 				drugDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());;
-				System.out.println(drugDiseasePair.toString());
+//				System.out.println(drugDiseasePair.toString());
 				drugDiseasesPairs.add(drugDiseasePair);
 			}
+			
 		}
 		
 		return drugDiseasesPairs;
+		
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((disease == null) ? 0 : disease.hashCode());
+		result = prime * result + ((drug == null) ? 0 : drug.hashCode());
+		result = prime * result + ((twoHopsLinks == null) ? 0 : twoHopsLinks.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DrugDiseasePair other = (DrugDiseasePair) obj;
+		if (disease == null) {
+			if (other.disease != null)
+				return false;
+		} else if (!disease.equals(other.disease))
+			return false;
+		if (drug == null) {
+			if (other.drug != null)
+				return false;
+		} else if (!drug.equals(other.drug))
+			return false;
+		if (twoHopsLinks == null) {
+			if (other.twoHopsLinks != null)
+				return false;
+		} else if (!twoHopsLinks.equals(other.twoHopsLinks))
+			return false;
+		return true;
+	}
+
 	public static HashMap<String, ArrayList<DrugDiseasePair>> getDrugDiseasesPairs() {
 		Mapper mapper = new Mapper();
 		HashMap<String, ArrayList<DrugDiseasePair>> drugDiseasesPairs = new HashMap<String, ArrayList<DrugDiseasePair>>();

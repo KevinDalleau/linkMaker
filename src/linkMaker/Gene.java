@@ -41,7 +41,44 @@ public class Gene {
 		return links;
 	 	}
  
- public static HashMap<String, ArrayList<String>> getGeneAttributes() {
+ @Override
+public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
+	result = prime * result + ((entrez_id == null) ? 0 : entrez_id.hashCode());
+	result = prime * result + ((pharmgkb_id == null) ? 0 : pharmgkb_id.hashCode());
+	return result;
+}
+
+@Override
+public boolean equals(Object obj) {
+	if (this == obj)
+		return true;
+	if (obj == null)
+		return false;
+	if (getClass() != obj.getClass())
+		return false;
+	Gene other = (Gene) obj;
+	if (attributes == null) {
+		if (other.attributes != null)
+			return false;
+	} else if (!attributes.equals(other.attributes))
+		return false;
+	if (entrez_id == null) {
+		if (other.entrez_id != null)
+			return false;
+	} else if (!entrez_id.equals(other.entrez_id))
+		return false;
+	if (pharmgkb_id == null) {
+		if (other.pharmgkb_id != null)
+			return false;
+	} else if (!pharmgkb_id.equals(other.pharmgkb_id))
+		return false;
+	return true;
+}
+
+public static HashMap<String, ArrayList<String>> getGeneAttributes() {
 	 HashMap<String,ArrayList<String>> attributes = new HashMap<String, ArrayList<String>>();
 		String queryLinks = "PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
 				"			PREFIX  foaf: <http://xmlns.com/foaf/0.1/>\n" + 
