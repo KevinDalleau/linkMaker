@@ -17,7 +17,6 @@ public class Drug {
 	String pharmgkb_id;
 	ArrayList<String> stitch_ids; //Multiple stich_id for one pharmgkb_id : multiple salts
 	ArrayList<String> attributes;
-	ArrayList<String> linked_diseases;
 	 
 	 public static HashMap<Integer,ArrayList<String>> getStitchID_disease_links() {
 			HashMap<Integer,ArrayList<String>> links = new HashMap<Integer, ArrayList<String>>();
@@ -101,7 +100,6 @@ public class Drug {
 		this.pharmgkb_id = pharmgkb_id;
 		this.stitch_ids = null;;
 		attributes = null;
-		linked_diseases = null;
 		
 	 }
 	 
@@ -109,7 +107,6 @@ public class Drug {
 		 this.pharmgkb_id = "";
 		 this.stitch_ids = null;
 		 attributes = null;
-		 linked_diseases = null;
 	 }
 
 	public String getPharmgkb_id() {
@@ -136,19 +133,12 @@ public class Drug {
 		this.attributes = attributes;
 	}
 
-	public ArrayList<String> getLinked_diseases() {
-		return linked_diseases;
-	}
-
-	public void setLinked_diseases(ArrayList<String> linked_diseases) {
-		this.linked_diseases = linked_diseases;
-	}
 
 	@Override
 	public String toString() {
 		return "Drug [pharmgkb_id=" + pharmgkb_id + ", stitch_ids="
 				+ stitch_ids + ", attributes=" + attributes
-				+ ", linked_diseases=" + linked_diseases + "]";
+				+ "]";
 	}
 	
 	
