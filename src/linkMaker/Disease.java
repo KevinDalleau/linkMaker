@@ -1,6 +1,8 @@
 package linkMaker;
 
-public class Disease {
+import java.io.Serializable;
+
+public class Disease implements Serializable{
 	@Override
 	public int hashCode() {
 		final int prime = 31;

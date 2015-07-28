@@ -1,5 +1,6 @@
 package linkMaker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +13,7 @@ import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 import fr.kevindalleau.Mapper.Mapper;
 
-public class DrugDiseasePair {
+public class DrugDiseasePair implements Serializable {
 	Drug drug;
 	Disease disease;
 	ArrayList<String> twoHopsLinks;

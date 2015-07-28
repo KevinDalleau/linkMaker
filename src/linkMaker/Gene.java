@@ -1,5 +1,6 @@
 package linkMaker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,7 +13,7 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
-public class Gene {
+public class Gene implements Serializable {
  String pharmgkb_id;
  String entrez_id;
  ArrayList<String> attributes;

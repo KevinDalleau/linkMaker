@@ -1,5 +1,6 @@
 package linkMaker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,7 +14,7 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
-public class Drug {
+public class Drug implements Serializable{
 	String pharmgkb_id;
 	ArrayList<String> stitch_ids; //Multiple stich_id for one pharmgkb_id : multiple salts
 	ArrayList<String> attributes;
