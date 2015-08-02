@@ -45,7 +45,6 @@ public class Main implements Serializable{
 			try {
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(finalGeneDiseasePairsFile));
 				finalGeneDiseasePairs = (HashSet<GeneDiseasePair>) ois.readObject();
-				
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -95,9 +94,14 @@ public class Main implements Serializable{
 			 Gene gene = pair.getGene();
 			 Drug drug = pair.getDrug();
 			 gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
-			 gene.setAttributes(geneAttributes.get(gene.getEntrez_id()));
 			 drug.setStitch_ids(mapper.getStitch_from_PharmGKB(drug.getPharmgkb_id()));
 			 ArrayList<GeneDiseasePair> geneDiseasesPairs = geneDiseasePairs.get(gene.getEntrez_id());
+			 if(geneDiseasesPairs != null) {
+				 for(GeneDiseasePair gdpair : geneDiseasesPairs) {
+					 gdpair.getGene().setAttributes(geneAttributes.get(gdpair.getGene().getEntrez_id()));
+				 } 
+			 }
+			 
 			 if(geneDiseasesPairs != null) {
 				 finalGeneDiseasePairs.addAll(geneDiseasesPairs);
 			 }
@@ -143,7 +147,8 @@ public class Main implements Serializable{
 			
 			for(int j=0;j<finalDrugDiseasePairsSize;j++) {
 				if (pair.getDisease().getCui().equals(((DrugDiseasePair) drugDiseasePairsArray[j]).getDisease().getCui())) {
-					System.out.println("Correspondance trouvée entre "+pair.getDisease().getCui()+ "et "+((DrugDiseasePair) drugDiseasePairsArray[j]).getDisease().getCui());
+					System.out.println("Correspondance trouvée entre "+pair.getDisease().getCui()+ " et "+((DrugDiseasePair) drugDiseasePairsArray[j]).getDisease().getCui());
+					System.out.println(pair.toString());
 				}
 			}
 			
