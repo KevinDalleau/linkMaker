@@ -142,13 +142,14 @@ public class Main implements Serializable{
 		Object[] drugDiseasePairsArray = finalDrugDiseasePairs.toArray();
 		
 		for(int i = 0;i<finalGeneDiseasePairsSize;i++) {
-			GeneDiseasePair pair = (GeneDiseasePair) geneDiseasePairsArray[i];
-			System.out.println(pair.getDisease().getCui());
+			GeneDiseasePair gdpair = (GeneDiseasePair) geneDiseasePairsArray[i];
+			System.out.println(gdpair.getDisease().getCui());
 			
 			for(int j=0;j<finalDrugDiseasePairsSize;j++) {
-				if (pair.getDisease().getCui().equals(((DrugDiseasePair) drugDiseasePairsArray[j]).getDisease().getCui())) {
-					System.out.println("Correspondance trouvée entre "+pair.getDisease().getCui()+ " et "+((DrugDiseasePair) drugDiseasePairsArray[j]).getDisease().getCui());
-					System.out.println(pair.toString());
+				DrugDiseasePair ddpair = (DrugDiseasePair) drugDiseasePairsArray[j];
+				if (gdpair.getDisease().getCui().equals(ddpair.getDisease().getCui())) {
+					Association association = new Association(gdpair,ddpair);
+					association.printAssociation();
 				}
 			}
 			
