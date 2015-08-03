@@ -70,7 +70,7 @@ public class GeneDiseasePair implements Serializable{
 	@Override
 	public String toString() {
 		return "GeneDiseasePair [gene=" + gene + ", disease=" + disease
-				+ twoHopsLinks +"]";
+				+ ", twoHopsLinks=" + twoHopsLinks + "]";
 	}
 
 	@Override
