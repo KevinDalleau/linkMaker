@@ -45,7 +45,6 @@ public class Main implements Serializable{
 			try {
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(finalGeneDiseasePairsFile));
 				finalGeneDiseasePairs = (HashSet<GeneDiseasePair>) ois.readObject();
-				
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -95,9 +94,14 @@ public class Main implements Serializable{
 			 Gene gene = pair.getGene();
 			 Drug drug = pair.getDrug();
 			 gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
-			 gene.setAttributes(geneAttributes.get(gene.getEntrez_id()));
 			 drug.setStitch_ids(mapper.getStitch_from_PharmGKB(drug.getPharmgkb_id()));
 			 ArrayList<GeneDiseasePair> geneDiseasesPairs = geneDiseasePairs.get(gene.getEntrez_id());
+			 if(geneDiseasesPairs != null) {
+				 for(GeneDiseasePair gdpair : geneDiseasesPairs) {
+					 gdpair.getGene().setAttributes(geneAttributes.get(gdpair.getGene().getEntrez_id()));
+				 } 
+			 }
+			 
 			 if(geneDiseasesPairs != null) {
 				 finalGeneDiseasePairs.addAll(geneDiseasesPairs);
 			 }
@@ -130,8 +134,26 @@ public class Main implements Serializable{
 			
 		}
 		
-		System.out.println(finalGeneDiseasePairs.size()+ " gene-disease pairs found");
-		System.out.println(finalDrugDiseasePairs.size()+ " drug-disease pairs found");
+		int finalGeneDiseasePairsSize = finalGeneDiseasePairs.size();
+		int finalDrugDiseasePairsSize = finalDrugDiseasePairs.size();
+		System.out.println(finalGeneDiseasePairsSize+ " gene-disease pairs found");
+		System.out.println(finalDrugDiseasePairsSize+ " drug-disease pairs found");
+		Object[] geneDiseasePairsArray = finalGeneDiseasePairs.toArray();
+		Object[] drugDiseasePairsArray = finalDrugDiseasePairs.toArray();
+		
+		for(int i = 0;i<finalGeneDiseasePairsSize;i++) {
+			GeneDiseasePair pair = (GeneDiseasePair) geneDiseasePairsArray[i];
+			System.out.println(pair.getDisease().getCui());
+			
+			for(int j=0;j<finalDrugDiseasePairsSize;j++) {
+				if (pair.getDisease().getCui().equals(((DrugDiseasePair) drugDiseasePairsArray[j]).getDisease().getCui())) {
+					System.out.println("Correspondance trouvée entre "+pair.getDisease().getCui()+ " et "+((DrugDiseasePair) drugDiseasePairsArray[j]).getDisease().getCui());
+					System.out.println(pair.toString());
+				}
+			}
+			
+		}
+		
 		 
 	}
 	
