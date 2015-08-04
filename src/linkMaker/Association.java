@@ -14,15 +14,35 @@ public class Association {
 	
 	public void printAssociation() {
 		System.out.println("Correspondance trouvée entre "+this.geneDiseasePair.getGene().getEntrez_id()+ " et "+this.drugDiseasePair.getDisease().getCui());
+		List<String> geneAttributes = this.geneDiseasePair.getGene().getAttributes();
+		List<String> drugAttributes = this.drugDiseasePair.getDrug().getAttributes();
 		List<String> two_hops_links_1 = this.geneDiseasePair.getTwoHopsLinks();
 		List<String> two_hops_links_2 = this.drugDiseasePair.getTwoHopsLinks();
-		List<String> list = this.getCombinations(two_hops_links_1, two_hops_links_2);
+		List<List<String>> globalList = new ArrayList<List<String>>();
+		globalList.add(geneAttributes);
+		globalList.add(drugAttributes);
+		globalList.add(two_hops_links_1);
+		globalList.add(two_hops_links_2);
+		List<String> list = this.getCombinations(globalList);
 		for(String output : list) {
 			System.out.println(output);
 		}
 	}
 	
-	private List<String> getCombinations(List<String> list1, List<String> list2) {
+	private List<String> getCombinations(List<List<String>> globalList) {
+		List<String> result = new ArrayList<String>();
+		if(globalList.get(0)!=null) {
+			result = globalList.get(0);
+		}
+		for(int i = 1; i<globalList.size();i++) {
+			if(globalList.get(i) !=null) {
+				result = combineLists(result,globalList.get(i));
+			}
+		}
+		return result;
+	}
+	
+	private List<String> combineLists(List<String> list1, List<String> list2) {
 		List<String> result = new ArrayList<String>();
 		StringBuilder builder = new StringBuilder();
 		for(String string1 : list1) {
@@ -34,6 +54,7 @@ public class Association {
 		}
 		return result;
 	}
+	
 	public GeneDiseasePair getGeneDiseasePair() {
 		return geneDiseasePair;
 	}
