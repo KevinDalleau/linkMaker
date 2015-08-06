@@ -1,5 +1,9 @@
 package linkMaker;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +21,9 @@ public class Association {
 		List<String> geneAttributes = this.geneDiseasePair.getGene().getAttributes();
 		List<String> drugAttributes = this.drugDiseasePair.getDrug().getAttributes();
 		List<String> diseaseAttributes = this.geneDiseasePair.getDisease().getAttributes();
-		diseaseAttributes.addAll(this.drugDiseasePair.getDisease().getAttributes());
+		if(this.drugDiseasePair.getDisease().getAttributes() !=null) {
+			diseaseAttributes.addAll(this.drugDiseasePair.getDisease().getAttributes());
+		}
 		List<String> two_hops_links_1 = this.geneDiseasePair.getTwoHopsLinks();
 		List<String> two_hops_links_2 = this.drugDiseasePair.getTwoHopsLinks();
 		List<List<String>> globalList = new ArrayList<List<String>>();
@@ -29,6 +35,22 @@ public class Association {
 		List<String> list = this.getCombinations(globalList);
 		for(String output : list) {
 			System.out.println(output);
+			File linksFile = new File("./links.csv");
+			if(!linksFile.exists()) {
+				try {
+					linksFile.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			try {
+				FileWriter fileWriter = new FileWriter(linksFile.getName(), true);
+				BufferedWriter bufferWritter = new BufferedWriter(fileWriter);
+    	        bufferWritter.write(output+"\n");
+    	        bufferWritter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
