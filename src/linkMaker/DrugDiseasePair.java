@@ -68,7 +68,6 @@ public class DrugDiseasePair implements Serializable {
 		this.twoHopsLinks = twoHopsLinks;
 	}
 	public static ArrayList<DrugDiseasePair> getDrugDiseasesPairs(Drug drug) {
-		Mapper mapper = new Mapper();
 		System.out.println("Diseases linked to " + drug.toString());
 		ArrayList<DrugDiseasePair> drugDiseasesPairs = new ArrayList<DrugDiseasePair>(10000);
 		Query query = new Query();

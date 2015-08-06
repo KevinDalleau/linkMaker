@@ -16,11 +16,14 @@ public class Association {
 		System.out.println("Correspondance trouvée entre "+this.geneDiseasePair.getGene().getEntrez_id()+ " et "+this.drugDiseasePair.getDisease().getCui());
 		List<String> geneAttributes = this.geneDiseasePair.getGene().getAttributes();
 		List<String> drugAttributes = this.drugDiseasePair.getDrug().getAttributes();
+		List<String> diseaseAttributes = this.geneDiseasePair.getDisease().getAttributes();
+		diseaseAttributes.addAll(this.drugDiseasePair.getDisease().getAttributes());
 		List<String> two_hops_links_1 = this.geneDiseasePair.getTwoHopsLinks();
 		List<String> two_hops_links_2 = this.drugDiseasePair.getTwoHopsLinks();
 		List<List<String>> globalList = new ArrayList<List<String>>();
 		globalList.add(geneAttributes);
 		globalList.add(drugAttributes);
+		globalList.add(diseaseAttributes);
 		globalList.add(two_hops_links_1);
 		globalList.add(two_hops_links_2);
 		List<String> list = this.getCombinations(globalList);

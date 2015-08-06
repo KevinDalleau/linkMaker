@@ -85,6 +85,7 @@ public class Main implements Serializable{
 			HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = GeneDiseasePair.getGeneDiseasesPairs();
 			HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
 			HashMap<String,ArrayList<String>> geneAttributes = Gene.getGeneAttributes();
+			HashMap<String,ArrayList<String>> diseaseAttributes = Disease.getDiseaseAttributes();
 			Iterator<DrugGenePair> iterator = pairs.iterator();
 			int i = 0;
 			while(iterator.hasNext()) {
@@ -99,6 +100,7 @@ public class Main implements Serializable{
 			 if(geneDiseasesPairs != null) {
 				 for(GeneDiseasePair gdpair : geneDiseasesPairs) {
 					 gdpair.getGene().setAttributes(geneAttributes.get(gdpair.getGene().getEntrez_id()));
+					 gdpair.getDisease().setAttributes(diseaseAttributes.get(gdpair.getDisease().getCui()));
 				 } 
 			 }
 			 
@@ -106,6 +108,11 @@ public class Main implements Serializable{
 				 finalGeneDiseasePairs.addAll(geneDiseasesPairs);
 			 }
 			 ArrayList<DrugDiseasePair> drugDiseasesPairs = DrugDiseasePair.getDrugDiseasesPairs(drug);
+			 if(drugDiseasesPairs !=null) {
+				 for(DrugDiseasePair ddpair : drugDiseasesPairs) {
+					 ddpair.getDisease().setAttributes(diseaseAttributes.get(ddpair.getDisease().getCui()));
+				 }
+			 }
 			 if(drugDiseasesPairs != null) {
 				 finalDrugDiseasePairs.addAll(drugDiseasesPairs);
 			 }
