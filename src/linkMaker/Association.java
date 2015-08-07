@@ -35,7 +35,7 @@ public class Association {
 		List<String> list = this.getCombinations(globalList);
 		for(String output : list) {
 			System.out.println(output);
-			File linksFile = new File("./links.csv");
+			File linksFile = new File("./nolinks.csv");
 			if(!linksFile.exists()) {
 				try {
 					linksFile.createNewFile();

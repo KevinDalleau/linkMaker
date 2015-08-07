@@ -168,7 +168,7 @@ public class DrugGenePair {
 				"				?drug rdf:type <http://pharmgkb.org/relationships/Drug>. \n" + 
 				"				?gene <http://pharmgkb.org/relationships/association> ?association. \n" + 
 				"				?drug <http://pharmgkb.org/relationships/association> ?association. \n" + 
-				"				?association <http://pharmgkb.org/relationships/association_type> \"associated\"\n" + 
+				"				?association <http://pharmgkb.org/relationships/association_type> \"not_associated\"\n" + 
 				"				}";
 		
 		QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/pharmgkbrelations/sparql", linksQuery);
