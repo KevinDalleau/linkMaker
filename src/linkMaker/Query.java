@@ -7,6 +7,8 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
+import fr.kevindalleau.Mapper.Mapper;
+
 public class Query {
 	
 	private String stitchValues;
@@ -119,6 +121,48 @@ public class Query {
 				queryExec.addParam("timeout","3600000");
 				return queryExec.execSelect();
 		}
+		else return null;
+		
+	}
+	
+	public ResultSet getDrugDiseaseRelationsFromMedispan(Drug drug) {
+		if(drug.getPharmgkb_id() !=null) {
+			Mapper mapper = new Mapper();
+			String cui = mapper.getUMLS_from_PharmGKB(drug.getPharmgkb_id());
+			System.out.println(cui);
+			if(cui != null) {
+				String queryLinks = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>  \n" + 
+						"				SELECT ?drug ?2_hops_links2 ?disease  \n" + 
+						"				WHERE {  \n" + 
+						"  {\n" + 
+						"				?drug_uri ?2_hops_links2_uri ?disease_uri.  \n" + 
+						"				?drug_uri rdf:type <http://orpailleur.fr/medispan/drug>.\n" + 
+						"    			?drug_uri <http://orpailleur.fr/medispan/indication> ?disease_uri.\n" + 
+						"				?disease_uri rdf:type <http://orpailleur.fr/medispan/event>\n" + 
+						"     			  BIND(\"indication\" AS ?2_hops_links2)\n" + 
+						"    			  FILTER regex(str(?drug_uri), \"http://orpailleur.fr/medispan/"+cui+"\")\n" + 
+						"				  BIND(REPLACE(str(?drug_uri), \"http://orpailleur.fr/medispan/\",\"\") AS ?drug)  \n" + 
+						"    BIND(REPLACE(str(?disease_uri), \"http://orpailleur.fr/medispan/\",\"\") AS ?disease)  }\n" + 
+						"  \n" + 
+						"  UNION {\n" + 
+						"  	?drug_uri ?2_hops_links2_uri ?disease_uri.  \n" + 
+						"				?drug_uri rdf:type <http://orpailleur.fr/medispan/drug>.\n" + 
+						"    			?drug_uri <http://orpailleur.fr/medispan/side_effet> ?disease_uri.\n" + 
+						"				?disease_uri rdf:type <http://orpailleur.fr/medispan/event>\n" + 
+						"      		      BIND(\"side_effect\" AS ?2_hops_links2)\n" + 
+						"    			  FILTER regex(str(?drug_uri), \"http://orpailleur.fr/medispan/"+cui+"\")\n" + 
+						"				  BIND(REPLACE(str(?drug_uri), \"http://orpailleur.fr/medispan/\",\"\") AS ?drug)  \n" + 
+						"				  BIND(REPLACE(str(?disease_uri), \"http://orpailleur.fr/medispan/\",\"\") AS ?disease)  \n" + 
+						"  }\n" + 
+						"}\n" + 
+						"";
+					QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/medispan/sparql", queryLinks);
+					queryExec.addParam("timeout","3600000");
+					return queryExec.execSelect();
+			}
+			else return null;
+		}
+
 		else return null;
 		
 	}

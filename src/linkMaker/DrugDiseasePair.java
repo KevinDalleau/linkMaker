@@ -80,11 +80,12 @@ public class DrugDiseasePair implements Serializable {
 				Disease disease= new Disease(diseaseNode.toString());
 				DrugDiseasePair drugDiseasePair = new DrugDiseasePair(drug,disease);
 				drugDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());;
-//				System.out.println(drugDiseasePair.toString());
+				System.out.println(drugDiseasePair.toString());
 				drugDiseasesPairs.add(drugDiseasePair);
 			}
 			
 		}
+		
 		
 		return drugDiseasesPairs;
 		
