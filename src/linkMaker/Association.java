@@ -16,7 +16,7 @@ public class Association {
 		this.drugDiseasePair= drugDiseasePair;
 	}
 	
-	public void printAssociation() {
+	public void printAssociation(String type) {
 		System.out.println("Correspondance trouvée entre "+this.geneDiseasePair.getGene().getEntrez_id()+ " et "+this.drugDiseasePair.getDisease().getCui());
 		List<String> geneAttributes = this.geneDiseasePair.getGene().getAttributes();
 		List<String> drugAttributes = this.drugDiseasePair.getDrug().getAttributes();
@@ -35,7 +35,16 @@ public class Association {
 		List<String> list = this.getCombinations(globalList);
 		for(String output : list) {
 			System.out.println(output);
-			File linksFile = new File("./nolinks.csv");
+			File linksFile = null;
+			if(type.equals("linked")) {
+				linksFile = new File("./links.csv");
+			}
+			else if(type.equals("not_linked")) {
+				linksFile = new File("./nolinks.csv");
+			}
+			else if(type.equals("specific")) {
+				linksFile = new File("./specificlinks.csv");
+			}
 			if(!linksFile.exists()) {
 				try {
 					linksFile.createNewFile();

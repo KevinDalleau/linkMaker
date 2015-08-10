@@ -29,7 +29,6 @@ public class Gene implements Serializable {
 				"}\n" + 
 				"";
 		
-		Query query = QueryFactory.create(queryLinks);
 		QueryExecution queryExec = QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/mappings/sparql", queryLinks);
 		ResultSet results = queryExec.execSelect();
 		while(results.hasNext()) {
