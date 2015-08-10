@@ -168,6 +168,38 @@ public class DrugGenePair {
 				"				?drug rdf:type <http://pharmgkb.org/relationships/Drug>. \n" + 
 				"				?gene <http://pharmgkb.org/relationships/association> ?association. \n" + 
 				"				?drug <http://pharmgkb.org/relationships/association> ?association. \n" + 
+				"				?association <http://pharmgkb.org/relationships/association_type> \"associated\"\n" + 
+				"				}";
+		
+		QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/pharmgkbrelations/sparql", linksQuery);
+		queryExec.addParam("timeout","3600000");
+		ResultSet results = queryExec.execSelect();
+		LinkedList<DrugGenePair> pairs = new LinkedList<DrugGenePair>();
+		
+		while(results.hasNext()) {
+			QuerySolution solution = results.nextSolution();
+			RDFNode geneNode = solution.get("gene");
+			RDFNode drugNode = solution.get("drug");
+			Gene gene = new Gene(stripURI(geneNode.toString()));
+			Drug drug = new Drug(stripURI(drugNode.toString()));
+			DrugGenePair drugGenePair = new DrugGenePair(gene, drug);
+			pairs.add(drugGenePair);	
+		}
+		
+		return pairs;
+		
+	}
+	
+	public static LinkedList<DrugGenePair> getNotAssociatedPairs() {
+		String linksQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" + 
+				"				 \n" + 
+				"				 \n" + 
+				"				SELECT ?gene ?association ?drug\n" + 
+				"				WHERE {  \n" + 
+				"				?gene rdf:type  <http://pharmgkb.org/relationships/Gene>. \n" + 
+				"				?drug rdf:type <http://pharmgkb.org/relationships/Drug>. \n" + 
+				"				?gene <http://pharmgkb.org/relationships/association> ?association. \n" + 
+				"				?drug <http://pharmgkb.org/relationships/association> ?association. \n" + 
 				"				?association <http://pharmgkb.org/relationships/association_type> \"not_associated\"\n" + 
 				"				}";
 		
@@ -188,5 +220,38 @@ public class DrugGenePair {
 		
 		return pairs;
 		
+	}
+	
+	public static LinkedList<DrugGenePair> getSpecificPair(String gene_id, String drug_id) {
+		String linksQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" + 
+				"							  \n" + 
+				"							  \n" + 
+				"							SELECT ?gene ?association ?drug \n" + 
+				"							WHERE {   \n" + 
+				"							?gene rdf:type  <http://pharmgkb.org/relationships/Gene>.  \n" + 
+				"							?drug rdf:type <http://pharmgkb.org/relationships/Drug>.  \n" + 
+				"							?gene <http://pharmgkb.org/relationships/association> ?association.  \n" + 
+				"							?drug <http://pharmgkb.org/relationships/association> ?association.  \n" + 
+				"							?association <http://pharmgkb.org/relationships/association_type> \"associated\"\n" + 
+				"    FILTER regex(str(?gene), \"http://pharmgkb.org/relationships/"+gene_id+"\")\n" + 
+				"  FILTER regex(str(?drug), \"http://pharmgkb.org/relationships/"+drug_id+"\")\n" + 
+				"							}";
+		
+		QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/pharmgkbrelations/sparql", linksQuery);
+		queryExec.addParam("timeout","3600000");
+		ResultSet results = queryExec.execSelect();
+		LinkedList<DrugGenePair> pairs = new LinkedList<DrugGenePair>();
+		
+		while(results.hasNext()) {
+			QuerySolution solution = results.nextSolution();
+			RDFNode geneNode = solution.get("gene");
+			RDFNode drugNode = solution.get("drug");
+			Gene gene = new Gene(stripURI(geneNode.toString()));
+			Drug drug = new Drug(stripURI(drugNode.toString()));
+			DrugGenePair drugGenePair = new DrugGenePair(gene, drug);
+			pairs.add(drugGenePair);	
+		}
+		
+		return pairs;
 	}
 }
