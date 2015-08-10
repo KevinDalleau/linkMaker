@@ -167,6 +167,26 @@ public class Query {
 		
 	}
 	
+	public ResultSet getAtcCodes(Drug drug) {
+		
+		if(drug.getPharmgkb_id() !=null) {
+			String pharmgkb_id = drug.getPharmgkb_id();
+			String queryLinks = "PREFIX void: <http://rdfs.org/ns/void#>\n" + 
+					"			PREFIX dv: <http://bio2rdf.org/bio2rdf.dataset_vocabulary:>\n" + 
+					"			SELECT ?atc\n" + 
+					"			WHERE {\n" + 
+					"			<http://bio2rdf.org/pharmgkb:"+pharmgkb_id+"> <http://bio2rdf.org/pharmgkb_vocabulary:x-atc> ?atc_uri.\n" + 
+					"			BIND(replace(str(?atc_uri), \"http://bio2rdf.org/atc:\", \"\") AS ?atc)\n" + 
+					"			}";
+			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://pharmgkb.bio2rdf.org/sparql", queryLinks);
+			queryExec.addParam("timeout","3600000");
+			return queryExec.execSelect();
+			
+		}
+
+		else return null;
+		}
+	
 	public ResultSet getDrugDiseaseRelations(String source) {
 		if (source.equals("medispan")) {
 			String queryLinks = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" + 
