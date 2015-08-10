@@ -1,6 +1,7 @@
 .DS_Store
 *.class
 *.csv
+*.ser
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
