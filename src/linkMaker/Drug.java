@@ -100,18 +100,35 @@ public class Drug implements Serializable{
 	public Drug(String pharmgkb_id) {
 		this.pharmgkb_id = pharmgkb_id;
 		this.stitch_ids = null;;
-		attributes = null;
+		attributes = new ArrayList<String>();
 		
 	 }
 	 
 	 public Drug() {
 		 this.pharmgkb_id = "";
 		 this.stitch_ids = null;
-		 attributes = null;
+		 attributes = new ArrayList<String>();
 	 }
 
 	public String getPharmgkb_id() {
 		return pharmgkb_id;
+	}
+	
+	public void setATC() {
+		linkMaker.Query query = new linkMaker.Query();
+		if(query.getAtcCodes(this) != null) {
+			ResultSet atc = query.getAtcCodes(this);
+			while(atc.hasNext()) {
+				QuerySolution solution = atc.nextSolution();
+				RDFNode atcCode = solution.get("atc");
+				System.out.println(atcCode.toString());
+				if(atcCode != null) {
+					this.addAttribute(atcCode.toString());
+				}
+			}
+			
+		}
+		
 	}
 
 	public void setPharmgkb_id(String pharmgkb_id) {
@@ -128,6 +145,10 @@ public class Drug implements Serializable{
 
 	public ArrayList<String> getAttributes() {
 		return attributes;
+	}
+	
+	public void addAttribute(String attribute) {
+		this.attributes.add(attribute);
 	}
 
 	public void setAttributes(ArrayList<String> attributes) {

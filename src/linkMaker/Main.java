@@ -27,6 +27,8 @@ public class Main implements Serializable{
 
 		if(args.length == 0) {
 			System.out.println("Veuillez passer un argument : linked, not_linked, specific gene_id drug_id");
+			System.out.println("Linked supposed");
+			args[0] = "linked";
 		}
 		else if(args[0].equalsIgnoreCase("linked")) {
 			LinkedList<DrugGenePair> pairs = DrugGenePair.getAssociatedPairs();
@@ -91,6 +93,7 @@ public class Main implements Serializable{
 				 Drug drug = pair.getDrug();
 				 gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
 				 drug.setStitch_ids(mapper.getStitch_from_PharmGKB(drug.getPharmgkb_id()));
+				 drug.setATC();
 				 ArrayList<GeneDiseasePair> geneDiseasesPairs = geneDiseasePairs.get(gene.getEntrez_id());
 				 if(geneDiseasesPairs != null) {
 					 for(GeneDiseasePair gdpair : geneDiseasesPairs) {
