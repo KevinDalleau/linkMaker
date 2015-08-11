@@ -226,6 +226,7 @@ public class Main implements Serializable{
 				 Drug drug = pair.getDrug();
 				 gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
 				 drug.setStitch_ids(mapper.getStitch_from_PharmGKB(drug.getPharmgkb_id()));
+				 drug.setATC();
 				 ArrayList<GeneDiseasePair> geneDiseasesPairs = geneDiseasePairs.get(gene.getEntrez_id());
 				 if(geneDiseasesPairs != null) {
 					 for(GeneDiseasePair gdpair : geneDiseasesPairs) {
@@ -362,6 +363,7 @@ public class Main implements Serializable{
 					 Drug drug = pair.getDrug();
 					 gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
 					 drug.setStitch_ids(mapper.getStitch_from_PharmGKB(drug.getPharmgkb_id()));
+					 drug.setATC();
 					 ArrayList<GeneDiseasePair> geneDiseasesPairs = geneDiseasePairs.get(gene.getEntrez_id());
 					 if(geneDiseasesPairs != null) {
 						 for(GeneDiseasePair gdpair : geneDiseasesPairs) {
