@@ -33,7 +33,6 @@ public class Association {
 		globalList.add(two_hops_links_1);
 		globalList.add(two_hops_links_2);
 		int numberOfPaths = Statistics.getNumberOfPaths(globalList);
-		System.out.println(numberOfPaths);
 		
 //		List<String> list = this.getCombinations(globalList);
 //		for(String output : list) {
