@@ -26,41 +26,44 @@ public class Association {
 		}
 		List<String> two_hops_links_1 = this.geneDiseasePair.getTwoHopsLinks();
 		List<String> two_hops_links_2 = this.drugDiseasePair.getTwoHopsLinks();
-		List<List<String>> globalList = new ArrayList<List<String>>();
-		globalList.add(geneAttributes);
-		globalList.add(drugAttributes);
-		globalList.add(diseaseAttributes);
-		globalList.add(two_hops_links_1);
-		globalList.add(two_hops_links_2);
-		List<String> list = this.getCombinations(globalList);
-		for(String output : list) {
-			System.out.println(output);
-			File linksFile = null;
-			if(type.equals("linked")) {
-				linksFile = new File("./links.csv");
-			}
-			else if(type.equals("not_linked")) {
-				linksFile = new File("./nolinks.csv");
-			}
-			else if(type.equals("specific")) {
-				linksFile = new File("./specificlinks.csv");
-			}
-			if(!linksFile.exists()) {
-				try {
-					linksFile.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			try {
-				FileWriter fileWriter = new FileWriter(linksFile.getName(), true);
-				BufferedWriter bufferWritter = new BufferedWriter(fileWriter);
-    	        bufferWritter.write(output+"\n");
-    	        bufferWritter.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		List<String> globalList = new ArrayList<String>();
+		globalList.addAll(geneAttributes);
+		globalList.addAll(drugAttributes);
+		globalList.addAll(diseaseAttributes);
+		globalList.addAll(two_hops_links_1);
+		globalList.addAll(two_hops_links_2);
+		int numberOfPaths = Statistics.factorial(globalList.size());
+		System.out.println(numberOfPaths);
+		
+//		List<String> list = this.getCombinations(globalList);
+//		for(String output : list) {
+//			System.out.println(output);
+//			File linksFile = null;
+//			if(type.equals("linked")) {
+//				linksFile = new File("./links.csv");
+//			}
+//			else if(type.equals("not_linked")) {
+//				linksFile = new File("./nolinks.csv");
+//			}
+//			else if(type.equals("specific")) {
+//				linksFile = new File("./specificlinks.csv");
+//			}
+//			if(!linksFile.exists()) {
+//				try {
+//					linksFile.createNewFile();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//			try {
+//				FileWriter fileWriter = new FileWriter(linksFile.getName(), true);
+//				BufferedWriter bufferWritter = new BufferedWriter(fileWriter);
+//    	        bufferWritter.write(output+"\n");
+//    	        bufferWritter.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 	
 	private List<String> getCombinations(List<List<String>> globalList) {
