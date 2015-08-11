@@ -159,17 +159,15 @@ public class DrugGenePair {
 	}; 
 	
 	public static LinkedList<DrugGenePair> getAssociatedPairs() {
-		String linksQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" + 
-				"				 \n" + 
-				"				 \n" + 
-				"				SELECT ?gene ?association ?drug\n" + 
-				"				WHERE {  \n" + 
-				"				?gene rdf:type  <http://pharmgkb.org/relationships/Gene>. \n" + 
-				"				?drug rdf:type <http://pharmgkb.org/relationships/Drug>. \n" + 
-				"				?gene <http://pharmgkb.org/relationships/association> ?association. \n" + 
-				"				?drug <http://pharmgkb.org/relationships/association> ?association. \n" + 
-				"				?association <http://pharmgkb.org/relationships/association_type> \"associated\"\n" + 
-				"				}";
+		String linksQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" + 
+				"SELECT DISTINCT ?gene ?drug \n" + 
+				"		WHERE {   \n" + 
+				"			?gene rdf:type  <http://pharmgkb.org/relationships/Gene>.  \n" + 
+				"			?drug rdf:type <http://pharmgkb.org/relationships/Drug>.  \n" + 
+				"			?gene <http://pharmgkb.org/relationships/association> ?association.  \n" + 
+				"			?drug <http://pharmgkb.org/relationships/association> ?association.  \n" + 
+				"			?association <http://pharmgkb.org/relationships/association_type> \"associated\"\n" + 
+				"		}";
 		
 		QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/pharmgkbrelations/sparql", linksQuery);
 		queryExec.addParam("timeout","3600000");
@@ -191,17 +189,15 @@ public class DrugGenePair {
 	}
 	
 	public static LinkedList<DrugGenePair> getNotAssociatedPairs() {
-		String linksQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" + 
-				"				 \n" + 
-				"				 \n" + 
-				"				SELECT ?gene ?association ?drug\n" + 
-				"				WHERE {  \n" + 
-				"				?gene rdf:type  <http://pharmgkb.org/relationships/Gene>. \n" + 
-				"				?drug rdf:type <http://pharmgkb.org/relationships/Drug>. \n" + 
-				"				?gene <http://pharmgkb.org/relationships/association> ?association. \n" + 
-				"				?drug <http://pharmgkb.org/relationships/association> ?association. \n" + 
-				"				?association <http://pharmgkb.org/relationships/association_type> \"not_associated\"\n" + 
-				"				}";
+		String linksQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" + 
+				"SELECT DISTINCT ?gene ?drug \n" + 
+				"		WHERE {   \n" + 
+				"			?gene rdf:type  <http://pharmgkb.org/relationships/Gene>.  \n" + 
+				"			?drug rdf:type <http://pharmgkb.org/relationships/Drug>.  \n" + 
+				"			?gene <http://pharmgkb.org/relationships/association> ?association.  \n" + 
+				"			?drug <http://pharmgkb.org/relationships/association> ?association.  \n" + 
+				"			?association <http://pharmgkb.org/relationships/association_type> \"not_associated\"\n" + 
+				"		}";
 		
 		QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/pharmgkbrelations/sparql", linksQuery);
 		queryExec.addParam("timeout","3600000");
@@ -223,16 +219,16 @@ public class DrugGenePair {
 	}
 	
 	public static LinkedList<DrugGenePair> getSpecificPair(String gene_id, String drug_id) {
+		
 		String linksQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" + 
-				"							  \n" + 
-				"							  \n" + 
-				"							SELECT ?gene ?association ?drug \n" + 
-				"							WHERE {   \n" + 
-				"							?gene rdf:type  <http://pharmgkb.org/relationships/Gene>.  \n" + 
-				"							?drug rdf:type <http://pharmgkb.org/relationships/Drug>.  \n" + 
-				"							?gene <http://pharmgkb.org/relationships/association> ?association.  \n" + 
-				"							?drug <http://pharmgkb.org/relationships/association> ?association.  \n" + 
-				"							?association <http://pharmgkb.org/relationships/association_type> \"associated\"\n" + 
+				"SELECT DISTINCT ?gene ?drug \n" + 
+				"		WHERE {   \n" + 
+				"			?gene rdf:type  <http://pharmgkb.org/relationships/Gene>.  \n" + 
+				"			?drug rdf:type <http://pharmgkb.org/relationships/Drug>.  \n" + 
+				"			?gene <http://pharmgkb.org/relationships/association> ?association.  \n" + 
+				"			?drug <http://pharmgkb.org/relationships/association> ?association.  \n" + 
+				"			?association <http://pharmgkb.org/relationships/association_type> \"associated\"\n" + 
+				"		}" + 
 				"    FILTER regex(str(?gene), \"http://pharmgkb.org/relationships/"+gene_id+"\")\n" + 
 				"  FILTER regex(str(?drug), \"http://pharmgkb.org/relationships/"+drug_id+"\")\n" + 
 				"							}";
