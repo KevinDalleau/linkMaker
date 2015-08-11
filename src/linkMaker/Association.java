@@ -33,36 +33,36 @@ public class Association {
 		globalList.add(two_hops_links_1);
 		globalList.add(two_hops_links_2);
 		int numberOfPaths = Statistics.getNumberOfPaths(globalList);
-		
-//		List<String> list = this.getCombinations(globalList);
-//		for(String output : list) {
-//			System.out.println(output);
-//			File linksFile = null;
-//			if(type.equals("linked")) {
-//				linksFile = new File("./links.csv");
-//			}
-//			else if(type.equals("not_linked")) {
-//				linksFile = new File("./nolinks.csv");
-//			}
-//			else if(type.equals("specific")) {
-//				linksFile = new File("./specificlinks.csv");
-//			}
-//			if(!linksFile.exists()) {
-//				try {
-//					linksFile.createNewFile();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//			try {
-//				FileWriter fileWriter = new FileWriter(linksFile.getName(), true);
-//				BufferedWriter bufferWritter = new BufferedWriter(fileWriter);
-//    	        bufferWritter.write(output+"\n");
-//    	        bufferWritter.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
+		System.out.println(numberOfPaths);
+		List<String> list = this.getCombinations(globalList);
+		for(String output : list) {
+			System.out.println(output);
+			File linksFile = null;
+			if(type.equals("linked")) {
+				linksFile = new File("./links.csv");
+			}
+			else if(type.equals("not_linked")) {
+				linksFile = new File("./nolinks.csv");
+			}
+			else if(type.equals("specific")) {
+				linksFile = new File("./specificlinks.csv");
+			}
+			if(!linksFile.exists()) {
+				try {
+					linksFile.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			try {
+				FileWriter fileWriter = new FileWriter(linksFile.getName(), true);
+				BufferedWriter bufferWritter = new BufferedWriter(fileWriter);
+    	        bufferWritter.write(output+"\n");
+    	        bufferWritter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private List<String> getCombinations(List<List<String>> globalList) {
