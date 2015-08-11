@@ -1,5 +1,8 @@
 package linkMaker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Statistics {
 	 public static int factorial(int n) {
 	       if (n == 0) {
@@ -8,4 +11,12 @@ public class Statistics {
 	           return n * factorial(n - 1);
 	       }
 	   }
+	 
+	 public static int getNumberOfPaths(List<List<String>> globalList) {
+		 int numberOfElements=0;
+		 for(List<String> list : globalList) {
+			 numberOfElements+=list.size();
+		 }
+		 return Statistics.factorial(numberOfElements);
+	 }
 }

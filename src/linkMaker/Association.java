@@ -26,13 +26,13 @@ public class Association {
 		}
 		List<String> two_hops_links_1 = this.geneDiseasePair.getTwoHopsLinks();
 		List<String> two_hops_links_2 = this.drugDiseasePair.getTwoHopsLinks();
-		List<String> globalList = new ArrayList<String>();
-		globalList.addAll(geneAttributes);
-		globalList.addAll(drugAttributes);
-		globalList.addAll(diseaseAttributes);
-		globalList.addAll(two_hops_links_1);
-		globalList.addAll(two_hops_links_2);
-		int numberOfPaths = Statistics.factorial(globalList.size());
+		List<List<String>> globalList = new ArrayList<List<String>>();
+		globalList.add(geneAttributes);
+		globalList.add(drugAttributes);
+		globalList.add(diseaseAttributes);
+		globalList.add(two_hops_links_1);
+		globalList.add(two_hops_links_2);
+		int numberOfPaths = Statistics.getNumberOfPaths(globalList);
 		System.out.println(numberOfPaths);
 		
 //		List<String> list = this.getCombinations(globalList);
