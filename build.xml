@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="linkMaker">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="linkMaker.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/commons-codec-1.6.jar"/>
+        <pathelement location="lib/commons-csv-1.0.jar"/>
+        <pathelement location="lib/commons-lang3-3.1.jar"/>
+        <pathelement location="lib/httpclient-4.2.6.jar"/>
+        <pathelement location="lib/httpclient-cache-4.2.6.jar"/>
+        <pathelement location="lib/httpcore-4.2.5.jar"/>
+        <pathelement location="lib/jackson-annotations-2.3.0.jar"/>
+        <pathelement location="lib/jackson-core-2.3.3.jar"/>
+        <pathelement location="lib/jackson-databind-2.3.3.jar"/>
+        <pathelement location="lib/jcl-over-slf4j-1.7.6.jar"/>
+        <pathelement location="lib/jena-arq-2.12.1.jar"/>
+        <pathelement location="lib/jena-core-2.12.1.jar"/>
+        <pathelement location="lib/jena-iri-1.1.1.jar"/>
+        <pathelement location="lib/jena-sdb-1.5.1.jar"/>
+        <pathelement location="lib/jena-tdb-1.1.1.jar"/>
+        <pathelement location="lib/jsonld-java-0.5.0.jar"/>
+        <pathelement location="lib/libthrift-0.9.1.jar"/>
+        <pathelement location="lib/log4j-1.2.17.jar"/>
+        <pathelement location="lib/slf4j-api-1.7.6.jar"/>
+        <pathelement location="lib/slf4j-log4j12-1.7.6.jar"/>
+        <pathelement location="lib/xercesImpl-2.11.0.jar"/>
+        <pathelement location="lib/xml-apis-1.4.01.jar"/>
+        <pathelement location="lib/mapper-0.0.2.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="linkMaker.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="Main (2)">
+        <java classname="linkMaker.Main" failonerror="true" fork="yes">
+            <arg line="not_linked"/>
+            <classpath refid="linkMaker.classpath"/>
+        </java>
+    </target>
+</project>
