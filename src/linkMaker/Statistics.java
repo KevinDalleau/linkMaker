@@ -15,8 +15,11 @@ public class Statistics {
 	 public static int getNumberOfPaths(List<List<String>> globalList) {
 		 int numberOfElements=0;
 		 for(List<String> list : globalList) {
-			 numberOfElements+=list.size();
+			 if(list !=null) {
+				 numberOfElements+=list.size();
+			 }
 		 }
-		 return Statistics.factorial(numberOfElements);
+		 return numberOfElements;
+		 //return Statistics.factorial(numberOfElements);
 	 }
 }

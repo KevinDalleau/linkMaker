@@ -17,13 +17,13 @@ public class Association {
 	}
 	
 	public void printAssociation(String type) {
-		System.out.println("Correspondance trouvée entre "+this.geneDiseasePair.getGene().getEntrez_id()+ " et "+this.drugDiseasePair.getDisease().getCui());
+		System.out.println("Correspondance trouvée entre "+this.geneDiseasePair.getGene().getEntrez_id()+ " et "+this.drugDiseasePair.getDrug().getPharmgkb_id()+" passant par "+ this.drugDiseasePair.getDisease().getCui());
 		List<String> geneAttributes = this.geneDiseasePair.getGene().getAttributes();
 		List<String> drugAttributes = this.drugDiseasePair.getDrug().getAttributes();
 		List<String> diseaseAttributes = this.geneDiseasePair.getDisease().getAttributes();
-		if(this.drugDiseasePair.getDisease().getAttributes() !=null) {
-			diseaseAttributes.addAll(this.drugDiseasePair.getDisease().getAttributes());
-		}
+//		if(this.drugDiseasePair.getDisease().getAttributes() !=null) {
+//			diseaseAttributes.addAll(this.drugDiseasePair.getDisease().getAttributes());
+//		}
 		List<String> two_hops_links_1 = this.geneDiseasePair.getTwoHopsLinks();
 		List<String> two_hops_links_2 = this.drugDiseasePair.getTwoHopsLinks();
 		List<List<String>> globalList = new ArrayList<List<String>>();
@@ -32,37 +32,43 @@ public class Association {
 		globalList.add(diseaseAttributes);
 		globalList.add(two_hops_links_1);
 		globalList.add(two_hops_links_2);
+		
 		int numberOfPaths = Statistics.getNumberOfPaths(globalList);
-		System.out.println(numberOfPaths);
-		List<String> list = this.getCombinations(globalList);
-		for(String output : list) {
-			System.out.println(output);
-			File linksFile = null;
-			if(type.equals("linked")) {
-				linksFile = new File("./links.csv");
-			}
-			else if(type.equals("not_linked")) {
-				linksFile = new File("./nolinks.csv");
-			}
-			else if(type.equals("specific")) {
-				linksFile = new File("./specificlinks.csv");
-			}
-			if(!linksFile.exists()) {
-				try {
-					linksFile.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			try {
-				FileWriter fileWriter = new FileWriter(linksFile.getName(), true);
-				BufferedWriter bufferWritter = new BufferedWriter(fileWriter);
-    	        bufferWritter.write(output+"\n");
-    	        bufferWritter.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if(diseaseAttributes !=null) {
+			System.out.println(numberOfPaths);
+
 		}
+		
+		
+		//List<String> list = this.getCombinations(globalList);
+		//for(String output : list) {
+//			System.out.println(output);
+//			File linksFile = null;
+//			if(type.equals("linked")) {
+//				linksFile = new File("./links.csv");
+//			}
+//			else if(type.equals("not_linked")) {
+//				linksFile = new File("./nolinks.csv");
+//			}
+//			else if(type.equals("specific")) {
+//				linksFile = new File("./specificlinks.csv");
+//			}
+//			if(!linksFile.exists()) {
+//				try {
+//					linksFile.createNewFile();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//			try {
+//				FileWriter fileWriter = new FileWriter(linksFile.getName(), true);
+//				BufferedWriter bufferWritter = new BufferedWriter(fileWriter);
+//    	        bufferWritter.write(output+"\n");
+//    	        bufferWritter.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+		//}
 	}
 	
 	private List<String> getCombinations(List<List<String>> globalList) {
