@@ -16,6 +16,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 public class Gene implements Serializable {
  String pharmgkb_id;
  String entrez_id;
+ String uniprot_id;
  ArrayList<String> attributes;
 
  public static HashMap<String,String> getPharmgkbIDEntrezIDLinks() {
@@ -178,8 +179,16 @@ public void setAttributes(ArrayList<String> attributes) {
 
 @Override
 public String toString() {
-	return "Gene [pharmgkb_id=" + pharmgkb_id + ", entrez_id=" + entrez_id
+	return "Gene [pharmgkb_id=" + pharmgkb_id + ", entrez_id=" + entrez_id + ", uniprot_id="+uniprot_id
 			+ ", attributes=" + attributes + "";
+}
+
+public String getUniprot_id() {
+	return uniprot_id;
+}
+
+public void setUniprot_id(String uniprot_id) {
+	this.uniprot_id = uniprot_id;
 }
 
 }

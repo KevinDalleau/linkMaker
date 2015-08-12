@@ -69,7 +69,7 @@ public class DrugDiseasePair implements Serializable {
 	}
 	public static ArrayList<DrugDiseasePair> getDrugDiseasesPairs(Drug drug) {
 		System.out.println("Diseases linked to " + drug.toString());
-		ArrayList<DrugDiseasePair> drugDiseasesPairs = new ArrayList<DrugDiseasePair>(10000);
+		ArrayList<DrugDiseasePair> drugDiseasesPairs = new ArrayList<DrugDiseasePair>(100);
 		Query query = new Query();
 		if(query.getDrugDiseaseRelationsFromSider(drug) != null) {
 			ResultSet Sider = query.getDrugDiseaseRelationsFromSider(drug);
@@ -83,12 +83,8 @@ public class DrugDiseasePair implements Serializable {
 				System.out.println(drugDiseasePair.toString());
 				drugDiseasesPairs.add(drugDiseasePair);
 			}
-			
-		}
-		
-		
+		}	
 		return drugDiseasesPairs;
-		
 	}
 	@Override
 	public int hashCode() {

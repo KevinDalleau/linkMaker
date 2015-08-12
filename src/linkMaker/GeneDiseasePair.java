@@ -111,7 +111,6 @@ public class GeneDiseasePair implements Serializable{
 	}
 	
 	public static HashMap<String, ArrayList<GeneDiseasePair>> getGeneDiseasesPairs() {
-		Mapper mapper = new Mapper();
 		HashMap<String, ArrayList<GeneDiseasePair>> geneDiseasesPairs = new HashMap<String, ArrayList<GeneDiseasePair>>();
 		Query query = new Query();
 		ResultSet disgenet = query.getGeneDiseaseRelations("disgenet");
