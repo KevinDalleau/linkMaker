@@ -14,56 +14,13 @@ import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 public class DrugGenePair {
 	Drug drug;
 	Gene gene;
-	ArrayList<String> diseases;
+	ArrayList<String> oneHopsLinks;
 	
 	public DrugGenePair(Gene gene, Drug drug) {
 		this.gene = gene;
 		this.drug = drug;
 	}
 	
-	public void add_undirect_link_clinvar() {
-		String gene = this.gene.getEntrez_id();
-		String queryLinks = "PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
-				"PREFIX  foaf: <http://xmlns.com/foaf/0.1/>\n" + 
-				"PREFIX  ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>\n" + 
-				"PREFIX  sio:  <http://semanticscience.org/resource/>\n" + 
-				"PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>\n" + 
-				"PREFIX  owl:  <http://www.w3.org/2002/07/owl#>\n" + 
-				"PREFIX  wp:   <http://vocabularies.wikipathways.org/wp#>\n" + 
-				"PREFIX  void: <http://rdfs.org/ns/void#>\n" + 
-				"PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" + 
-				"PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>\n" + 
-				"PREFIX  dcterms: <http://purl.org/dc/terms/>\n" + 
-				"\n" + 
-				"SELECT DISTINCT ?gene ?disease\n" + 
-				"WHERE {\n" + 
-				"{\n" + 
-				"?a <http://bio2rdf.org/clinvar_vocabulary:Variant_Gene> ?variant_gene .\n" + 
-				"?variant_gene <http://bio2rdf.org/clinvar_vocabulary:x-gene> ?gene_bio .\n" + 
-				"?a <http://bio2rdf.org/clinvar_vocabulary:Variant_Phenotype> ?phenotype .\n" + 
-				"?phenotype <http://bio2rdf.org/clinvar_vocabulary:x-medgen> ?disease_bio\n" + 
-				"      FILTER regex(str(?gene_bio),\"http://bio2rdf.org/ncbigene:"+gene+"\")\n" + 
-				"      BIND(REPLACE(str(?gene_bio), \"http://bio2rdf.org/ncbigene:\", \"\") AS ?gene)\n" + 
-				"      BIND(REPLACE(str(?disease_bio), \"http://bio2rdf.org/medgen:c\",\"C\") AS ?disease)\n" + 
-				"\n" + 
-				"}\n" + 
-				"}\n" + 
-				"LIMIT 200\n" + 
-				"";
-		Query query = QueryFactory.create(queryLinks);
-		
-		QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/clinvar/sparql", queryLinks);
-		queryExec.addParam("timeout","3600000");
-
-		ResultSet results = queryExec.execSelect();
-		while(results.hasNext()) {
-			QuerySolution solution = results.nextSolution();
-			RDFNode stitchIdNode = solution.get("gene");
-			RDFNode diseaseNode = solution.get("disease");
-			this.addDisease(diseaseNode.toString());
-		};
-		queryExec.close();
-	}
 	
 	public ArrayList<GeneDiseasePair> getGeneDiseasesPairs() {
 		String gene = this.gene.getEntrez_id();
@@ -129,16 +86,16 @@ public class DrugGenePair {
 		this.drug = drug;
 	}
 	
-	public ArrayList<String> getDiseases() {
-		return diseases;
+	public ArrayList<String> getOneHopsLinks() {
+		return oneHopsLinks;
 	}
 
-	public void setDiseases(ArrayList<String> disease) {
-		this.diseases = disease;
+	public void setOneHopsLinks(ArrayList<String> oneHopsLink) {
+		this.oneHopsLinks = oneHopsLink;
 	}
 	
-	public void addDisease(String disease) {
-		this.diseases.add(disease);
+	public void addOneHopsLink(String oneHopsLink) {
+		this.oneHopsLinks.add(oneHopsLink);
 	}
 
 	public Gene getGene() {
@@ -151,7 +108,7 @@ public class DrugGenePair {
 
 	@Override
 	public String toString() {
-		return "DrugGenePair [drug=" + drug + ", gene=" + gene + ", diseases =" + diseases +"]";
+		return "DrugGenePair [drug=" + drug + ", gene=" + gene + ", oneHopsLinks =" + oneHopsLinks +"]";
 	}
 	
 	public static String stripURI(String in) {
