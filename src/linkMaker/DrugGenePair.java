@@ -19,7 +19,9 @@ public class DrugGenePair {
 	public DrugGenePair(Gene gene, Drug drug) {
 		this.gene = gene;
 		this.drug = drug;
+		this.oneHopsLinks = new ArrayList<String>();
 	}
+	
 	
 	public ArrayList<GeneDiseasePair> getGeneDiseasesPairs() {
 		String gene = this.gene.getEntrez_id();
@@ -89,12 +91,42 @@ public class DrugGenePair {
 		return oneHopsLinks;
 	}
 
-	public void setOneHopsLinks(ArrayList<String> oneHopsLink) {
-		this.oneHopsLinks = oneHopsLink;
+	public void setOneHopsLinks() {
+		String drug = this.drug.getDrugbank_id();
+		String gene = this.gene.getUniprot_id();
+		ArrayList<String> oneHopsLinks = new ArrayList<String>();
+		String queryLinks = "PREFIX http: <http://www.w3.org/2011/http#>\n" + 
+				"prefix owl: <http://www.w3.org/2002/07/owl#>\n" + 
+				"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
+				"SELECT DISTINCT ?target ?action\n" + 
+				"WHERE {\n" + 
+				"<http://bio2rdf.org/drugbank:"+drug+"> <http://bio2rdf.org/drugbank_vocabulary:target> ?target_uri.\n" + 
+				"?target_uri <http://bio2rdf.org/drugbank_vocabulary:x-uniprot> <http://bio2rdf.org/uniprot:"+gene+">.\n" + 
+				"?target_uri <http://bio2rdf.org/bio2rdf_vocabulary:identifier> ?target.\n" + 
+				"BIND(uri(\"http://bio2rdf.org/drugbank_resource:"+drug+"_\"+?target) AS ?relation_uri)\n" + 
+				"?relation_uri <http://bio2rdf.org/drugbank_vocabulary:action> ?action_uri\n" + 
+				"BIND(replace(str(?action_uri), \"http://bio2rdf.org/drugbank_vocabulary:\",\"\") AS ?action)\n" + 
+				"}";
+		Query query = QueryFactory.create(queryLinks);
+		System.out.println(queryLinks);
+		QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/drugbank/sparql", queryLinks);
+		queryExec.addParam("timeout","3600000");
+
+		ResultSet results = queryExec.execSelect();
+		while(results.hasNext()) {
+			QuerySolution solution = results.nextSolution();
+			RDFNode oneHopsLinksNode = solution.get("action");
+		oneHopsLinks.add(oneHopsLinksNode.toString());
+		};
+		queryExec.close();
+		this.setOneHopsLinks(oneHopsLinks);
+		//this.oneHopsLinks = oneHopsLink;
 	}
 	
-	public void addOneHopsLink(String oneHopsLink) {
-		this.oneHopsLinks.add(oneHopsLink);
+	public void addOneHopLink(String oneHopLink) {
+		if(!this.getOneHopsLinks().contains(oneHopLink)) {
+			this.oneHopsLinks.add(oneHopLink);
+		}
 	}
 
 	public Gene getGene() {
@@ -205,5 +237,10 @@ public class DrugGenePair {
 		}
 		
 		return pairs;
+	}
+
+
+	public void setOneHopsLinks(ArrayList<String> oneHopsLinks) {
+		this.oneHopsLinks = oneHopsLinks;
 	}
 }
