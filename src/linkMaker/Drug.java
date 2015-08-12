@@ -16,8 +16,10 @@ import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 public class Drug implements Serializable{
 	String pharmgkb_id;
+	String drugbank_id;
 	ArrayList<String> stitch_ids; //Multiple stich_id for one pharmgkb_id : multiple salts
 	ArrayList<String> attributes;
+	ArrayList<String> targets;
 	 
 	 public static HashMap<Integer,ArrayList<String>> getStitchID_disease_links() {
 			HashMap<Integer,ArrayList<String>> links = new HashMap<Integer, ArrayList<String>>();
@@ -101,6 +103,7 @@ public class Drug implements Serializable{
 		this.pharmgkb_id = pharmgkb_id;
 		this.stitch_ids = null;;
 		attributes = new ArrayList<String>();
+		targets = new ArrayList<String>();
 		
 	 }
 	 
@@ -108,6 +111,7 @@ public class Drug implements Serializable{
 		 this.pharmgkb_id = "";
 		 this.stitch_ids = null;
 		 attributes = new ArrayList<String>();
+		 targets = new ArrayList<String>();
 	 }
 
 	public String getPharmgkb_id() {
@@ -129,7 +133,10 @@ public class Drug implements Serializable{
 		}
 		
 	}
-
+	
+	public void setTargets() {
+		
+	}
 	public void setPharmgkb_id(String pharmgkb_id) {
 		this.pharmgkb_id = pharmgkb_id;
 	}
@@ -157,9 +164,25 @@ public class Drug implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Drug [pharmgkb_id=" + pharmgkb_id + ", stitch_ids="
-				+ stitch_ids + ", attributes=" + attributes
-				+ "]";
+		return "Drug [pharmgkb_id=" + pharmgkb_id + ", drugbank_id="
+				+ drugbank_id + ", stitch_ids=" + stitch_ids + ", attributes="
+				+ attributes + ", targets=" + targets + "]";
+	}
+
+	public String getDrugbank_id() {
+		return drugbank_id;
+	}
+
+	public void setDrugbank_id(String drugbank_id) {
+		this.drugbank_id = drugbank_id;
+	}
+
+	public ArrayList<String> getTargets() {
+		return targets;
+	}
+
+	public void setTargets(ArrayList<String> targets) {
+		this.targets = targets;
 	}
 	
 	

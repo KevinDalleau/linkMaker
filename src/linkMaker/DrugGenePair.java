@@ -21,7 +21,6 @@ public class DrugGenePair {
 		this.drug = drug;
 	}
 	
-	
 	public ArrayList<GeneDiseasePair> getGeneDiseasesPairs() {
 		String gene = this.gene.getEntrez_id();
 		ArrayList<GeneDiseasePair> geneDiseasePairs = new ArrayList<GeneDiseasePair>();

@@ -13,13 +13,12 @@ public class Statistics {
 	   }
 	 
 	 public static int getNumberOfPaths(List<List<String>> globalList) {
-		 int numberOfElements=0;
+		 int numberOfPaths=1;
 		 for(List<String> list : globalList) {
 			 if(list !=null) {
-				 numberOfElements+=list.size();
+				 numberOfPaths*=list.size();
 			 }
 		 }
-		 return numberOfElements;
-		 //return Statistics.factorial(numberOfElements);
+		 return numberOfPaths;
 	 }
 }
