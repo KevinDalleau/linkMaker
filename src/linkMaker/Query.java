@@ -34,16 +34,17 @@ public class Query {
 		}
 	
 	public ResultSet getTargets(Drug drug) {
-		if(drug.getPharmgkb_id() !=null) {
-			String pharmgkb_id = drug.getPharmgkb_id();
-			String queryLinks = "PREFIX void: <http://rdfs.org/ns/void#>\n" + 
-					"			PREFIX dv: <http://bio2rdf.org/bio2rdf.dataset_vocabulary:>\n" + 
-					"			SELECT ?atc\n" + 
-					"			WHERE {\n" + 
-					"			<http://bio2rdf.org/pharmgkb:"+pharmgkb_id+"> <http://bio2rdf.org/pharmgkb_vocabulary:x-atc> ?atc_uri.\n" + 
-					"			BIND(replace(str(?atc_uri), \"http://bio2rdf.org/atc:\", \"\") AS ?atc)\n" + 
-					"			}";
-			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://pharmgkb.bio2rdf.org/sparql", queryLinks);
+		if(drug.getDrugbank_id() !=null) {
+			String drugbank_id = drug.getDrugbank_id();
+			String queryLinks = "PREFIX http: <http://www.w3.org/2011/http#>\n" + 
+					"prefix owl: <http://www.w3.org/2002/07/owl#>\n" + 
+					"prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
+					"SELECT DISTINCT ?target\n" + 
+					"WHERE {\n" + 
+					"<http://bio2rdf.org/drugbank:DB00318> <http://bio2rdf.org/drugbank_vocabulary:target> ?target_uri\n" + 
+					"BIND(replace(str(?target_uri), \"http://bio2rdf.org/drugbank:\",\"\") AS ?target)\n" + 
+					"}";
+			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr:/drugbank/sparql", queryLinks);
 			queryExec.addParam("timeout","3600000");
 			return queryExec.execSelect();
 			

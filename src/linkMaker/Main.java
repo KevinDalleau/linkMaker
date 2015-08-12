@@ -112,6 +112,7 @@ public class Main implements Serializable{
 				gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
 				drug.setStitch_ids(mapper.getStitch_from_PharmGKB(drug.getPharmgkb_id()));
 				drug.setDrugbank_id(mapper.getDrugbank_from_PharmGKB(drug.getPharmgkb_id()));
+				drug.setTargets();
 				//drug.setATC();
 				ArrayList<GeneDiseasePair> geneDiseasesPairs = geneDiseasePairs.get(gene.getEntrez_id());
 				if(geneDiseasesPairs != null) {

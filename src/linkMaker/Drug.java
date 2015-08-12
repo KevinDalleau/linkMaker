@@ -135,6 +135,17 @@ public class Drug implements Serializable{
 	}
 	
 	public void setTargets() {
+		linkMaker.Query query = new linkMaker.Query();
+		if(query.getTargets(this) != null) {
+			ResultSet targets = query.getTargets(this);
+			while(targets.hasNext()) {
+				QuerySolution solution = targets.nextSolution();
+				RDFNode targetsNode = solution.get("target");
+				if(targetsNode != null) {
+					this.addTarget(targetsNode.toString());
+				}
+			}
+		}
 		
 	}
 	public void setPharmgkb_id(String pharmgkb_id) {
@@ -183,6 +194,10 @@ public class Drug implements Serializable{
 
 	public void setTargets(ArrayList<String> targets) {
 		this.targets = targets;
+	}
+	
+	public void addTarget(String target) {
+		this.targets.add(target);
 	}
 	
 	
