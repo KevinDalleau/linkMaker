@@ -108,7 +108,6 @@ public class DrugGenePair {
 				"BIND(replace(str(?action_uri), \"http://bio2rdf.org/drugbank_vocabulary:\",\"\") AS ?action)\n" + 
 				"}";
 		Query query = QueryFactory.create(queryLinks);
-		System.out.println(queryLinks);
 		QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/drugbank/sparql", queryLinks);
 		queryExec.addParam("timeout","3600000");
 
@@ -216,7 +215,6 @@ public class DrugGenePair {
 				"			?gene <http://pharmgkb.org/relationships/association> ?association.  \n" + 
 				"			?drug <http://pharmgkb.org/relationships/association> ?association.  \n" + 
 				"			?association <http://pharmgkb.org/relationships/association_type> \"associated\"\n" + 
-				"		}" + 
 				"    FILTER regex(str(?gene), \"http://pharmgkb.org/relationships/"+gene_id+"\")\n" + 
 				"  FILTER regex(str(?drug), \"http://pharmgkb.org/relationships/"+drug_id+"\")\n" + 
 				"							}";

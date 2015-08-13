@@ -96,92 +96,45 @@ public class Main implements Serializable{
 		}
 
 		System.out.println("Number of known pairs : "+ pairs.size());
-		if(!pairStored) {
-			HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = GeneDiseasePair.getGeneDiseasesPairs();
-			HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
-			HashMap<String,ArrayList<String>> geneAttributes = Gene.getGeneAttributes();
-			HashMap<String,ArrayList<String>> diseaseAttributes = Disease.getDiseaseAttributes();
-			Iterator<DrugGenePair> iterator = pairs.iterator();
-			int i = 0;
-			while(iterator.hasNext()) {
-				System.out.println("Pair number "+i);
-				i++;
-				DrugGenePair pair = iterator.next();
-				Gene gene = pair.getGene();
-				Drug drug = pair.getDrug();
-				gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
-				gene.setUniprot_id(mapper.getUniProt_from_PharmGKB(gene.getPharmgkb_id()));
-				drug.setStitch_ids(mapper.getStitch_from_PharmGKB(drug.getPharmgkb_id()));
-				drug.setDrugbank_id(mapper.getDrugbank_from_PharmGKB(drug.getPharmgkb_id()));
-				drug.setTargets();
-				pair.setOneHopsLinks();
-				
-				System.out.println(pair);
-				//drug.setATC();
-				ArrayList<GeneDiseasePair> geneDiseasesPairs = geneDiseasePairs.get(gene.getEntrez_id());
-				if(geneDiseasesPairs != null) {
-					for(GeneDiseasePair gdpair : geneDiseasesPairs) {
-						gdpair.getGene().setAttributes(geneAttributes.get(gdpair.getGene().getEntrez_id()));
-						gdpair.getDisease().setAttributes(diseaseAttributes.get(gdpair.getDisease().getCui()));
-					} 
-				}
-
-				if(geneDiseasesPairs != null) {
-					finalGeneDiseasePairs.addAll(geneDiseasesPairs);
-				}
-				ArrayList<DrugDiseasePair> drugDiseasesPairs = DrugDiseasePair.getDrugDiseasesPairs(drug);
-				if(drugDiseasesPairs !=null) {
+		//		if(!pairStored) {
+		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = GeneDiseasePair.getGeneDiseasesPairs();
+		HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
+		HashMap<String,ArrayList<String>> geneAttributes = Gene.getGeneAttributes();
+		HashMap<String,ArrayList<String>> diseaseAttributes = Disease.getDiseaseAttributes();
+		Iterator<DrugGenePair> iterator = pairs.iterator();
+		int i = 0;
+		while(iterator.hasNext()) {
+			System.out.println("Pair number "+i);
+			i++;
+			DrugGenePair pair = iterator.next();
+			Gene gene = pair.getGene();
+			Drug drug = pair.getDrug();
+			gene.setEntrez_id(geneEntrezLinks.get(gene.getPharmgkb_id()));
+			gene.setUniprot_id(mapper.getUniProt_from_PharmGKB(gene.getPharmgkb_id()));
+			drug.setStitch_ids(mapper.getStitch_from_PharmGKB(drug.getPharmgkb_id()));
+			drug.setDrugbank_id(mapper.getDrugbank_from_PharmGKB(drug.getPharmgkb_id()));
+			drug.setTargets();
+			pair.setOneHopsLinks();
+			//drug.setATC();
+			ArrayList<GeneDiseasePair> geneDiseasesPairs = geneDiseasePairs.get(gene.getEntrez_id());
+			ArrayList<DrugDiseasePair> drugDiseasesPairs = DrugDiseasePair.getDrugDiseasesPairs(drug);
+			
+			if(geneDiseasesPairs != null && drugDiseasesPairs != null) {
+				for(GeneDiseasePair gdpair : geneDiseasesPairs) {
+					System.out.println("Gene : "+gdpair.getGene().getEntrez_id()+" Maladie : "+gdpair.getDisease().getCui());
 					for(DrugDiseasePair ddpair : drugDiseasesPairs) {
-						ddpair.getDisease().setAttributes(diseaseAttributes.get(ddpair.getDisease().getCui()));
+						System.out.println("Drug : "+ddpair.getDrug().getPharmgkb_id()+" Disease :"+ddpair.getDisease().getCui());
+						if (gdpair.getDisease().getCui().equals(ddpair.getDisease().getCui())) {
+							System.out.println("WOAW : "+gdpair.getGene().getEntrez_id()+" et "+ddpair.getDrug().getPharmgkb_id()+" sont liés ! Le passage se fait par :"+ddpair.getDisease().getCui());
+							ddpair.getDisease().setAttributes(diseaseAttributes.get(ddpair.getDisease().getCui()));
+							gdpair.getGene().setAttributes(geneAttributes.get(gdpair.getGene().getEntrez_id()));
+							gdpair.getDisease().setAttributes(diseaseAttributes.get(gdpair.getDisease().getCui()));
+							Association association = new Association(pair,gdpair,ddpair);
+							association.printAssociation(typeOfAssociation);
+						}
 					}
 				}
-				if(drugDiseasesPairs != null) {
-					finalDrugDiseasePairs.addAll(drugDiseasesPairs);
-				}
-			}
-			try {
-				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(finalGeneDiseasePairsFile));
-				oos.writeObject(finalGeneDiseasePairs);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(finalDrugDiseasePairsFile));
-				oos.writeObject(finalDrugDiseasePairs);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-
-		int finalGeneDiseasePairsSize = finalGeneDiseasePairs.size();
-		int finalDrugDiseasePairsSize = finalDrugDiseasePairs.size();
-		System.out.println(finalGeneDiseasePairsSize+ " gene-disease pairs found");
-		System.out.println(finalDrugDiseasePairsSize+ " drug-disease pairs found");
-		Object[] geneDiseasePairsArray = finalGeneDiseasePairs.toArray();
-		Object[] drugDiseasePairsArray = finalDrugDiseasePairs.toArray();
-
-		for(int i = 0;i<finalGeneDiseasePairsSize;i++) {
-			GeneDiseasePair gdpair = (GeneDiseasePair) geneDiseasePairsArray[i];
-			System.out.println(gdpair.getDisease().getCui());
-
-			for(int j=0;j<finalDrugDiseasePairsSize;j++) {
-				DrugDiseasePair ddpair = (DrugDiseasePair) drugDiseasePairsArray[j];
-				if (gdpair.getDisease().getCui().equals(ddpair.getDisease().getCui())) {
-					Association association = new Association(gdpair,ddpair);
-					association.printAssociation(typeOfAssociation);
-				}
-			}
-
+			}				
 		}
 	}		
 }

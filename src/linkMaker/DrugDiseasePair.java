@@ -68,7 +68,7 @@ public class DrugDiseasePair implements Serializable {
 		this.twoHopsLinks = twoHopsLinks;
 	}
 	public static ArrayList<DrugDiseasePair> getDrugDiseasesPairs(Drug drug) {
-		System.out.println("Diseases linked to " + drug.toString());
+		//System.out.println("Diseases linked to " + drug.toString());
 		ArrayList<DrugDiseasePair> drugDiseasesPairs = new ArrayList<DrugDiseasePair>(100);
 		Query query = new Query();
 		if(query.getDrugDiseaseRelationsFromSider(drug) != null) {
@@ -80,7 +80,6 @@ public class DrugDiseasePair implements Serializable {
 				Disease disease= new Disease(diseaseNode.toString());
 				DrugDiseasePair drugDiseasePair = new DrugDiseasePair(drug,disease);
 				drugDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());;
-				System.out.println(drugDiseasePair.toString());
 				drugDiseasesPairs.add(drugDiseasePair);
 			}
 		}	

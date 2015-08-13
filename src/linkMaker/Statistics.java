@@ -15,7 +15,7 @@ public class Statistics {
 	 public static int getNumberOfPaths(List<List<String>> globalList) {
 		 int numberOfPaths=1;
 		 for(List<String> list : globalList) {
-			 if(list !=null) {
+			 if(list !=null && list.size() != 0) {
 				 numberOfPaths*=list.size();
 			 }
 		 }
