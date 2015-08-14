@@ -74,11 +74,11 @@ public class Association {
 	
 	private List<String> getCombinations(List<List<String>> globalList) {
 		List<String> result = new ArrayList<String>();
-		if(globalList.get(0)!=null && globalList.size() != 0) {
+		if(globalList.get(0)!=null && globalList.size() != 0 && globalList.get(0).size() != 0) {
 			result = globalList.get(0);
 		}
 		for(int i = 1; i<globalList.size();i++) {
-			if(globalList.get(i) !=null && globalList.size() != 0) {
+			if(globalList.get(i) !=null && globalList.get(i).size() != 0) {
 				result = combineLists(result,globalList.get(i));
 			}
 		}

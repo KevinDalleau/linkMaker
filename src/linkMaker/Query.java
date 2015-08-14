@@ -158,7 +158,6 @@ public class Query {
 					"  BIND(REPLACE(str(?disease_uri), \"http://bio2rdf.org/umls:\",\"\") AS ?disease)\n" + 
 					"  }}\n" + 
 					"";
-				System.out.println(queryLinks);
 				QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/sider/sparql", queryLinks);
 				queryExec.addParam("timeout","3600000");
 				return queryExec.execSelect();

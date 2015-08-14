@@ -115,17 +115,16 @@ public class Main implements Serializable{
 			drug.setDrugbank_id(mapper.getDrugbank_from_PharmGKB(drug.getPharmgkb_id()));
 			drug.setTargets();
 			pair.setOneHopsLinks();
-			//drug.setATC();
+			drug.setATC();
 			ArrayList<GeneDiseasePair> geneDiseasesPairs = geneDiseasePairs.get(gene.getEntrez_id());
 			ArrayList<DrugDiseasePair> drugDiseasesPairs = DrugDiseasePair.getDrugDiseasesPairs(drug);
 			
 			if(geneDiseasesPairs != null && drugDiseasesPairs != null) {
 				for(GeneDiseasePair gdpair : geneDiseasesPairs) {
-					System.out.println("Gene : "+gdpair.getGene().getEntrez_id()+" Maladie : "+gdpair.getDisease().getCui());
+					System.out.println("Gene-Disease pair : "+gdpair.hashCode());
+					System.out.println("Nombre de pairs drug-disease : "+drugDiseasesPairs.size());
 					for(DrugDiseasePair ddpair : drugDiseasesPairs) {
-						System.out.println("Drug : "+ddpair.getDrug().getPharmgkb_id()+" Disease :"+ddpair.getDisease().getCui());
 						if (gdpair.getDisease().getCui().equals(ddpair.getDisease().getCui())) {
-							System.out.println("WOAW : "+gdpair.getGene().getEntrez_id()+" et "+ddpair.getDrug().getPharmgkb_id()+" sont liés ! Le passage se fait par :"+ddpair.getDisease().getCui());
 							ddpair.getDisease().setAttributes(diseaseAttributes.get(ddpair.getDisease().getCui()));
 							gdpair.getGene().setAttributes(geneAttributes.get(gdpair.getGene().getEntrez_id()));
 							gdpair.getDisease().setAttributes(diseaseAttributes.get(gdpair.getDisease().getCui()));
