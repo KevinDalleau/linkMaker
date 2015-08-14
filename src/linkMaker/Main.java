@@ -121,8 +121,6 @@ public class Main implements Serializable{
 			
 			if(geneDiseasesPairs != null && drugDiseasesPairs != null) {
 				for(GeneDiseasePair gdpair : geneDiseasesPairs) {
-					System.out.println("Gene-Disease pair : "+gdpair.hashCode());
-					System.out.println("Nombre de pairs drug-disease : "+drugDiseasesPairs.size());
 					for(DrugDiseasePair ddpair : drugDiseasesPairs) {
 						if (gdpair.getDisease().getCui().equals(ddpair.getDisease().getCui())) {
 							ddpair.getDisease().setAttributes(diseaseAttributes.get(ddpair.getDisease().getCui()));

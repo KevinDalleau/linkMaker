@@ -24,7 +24,7 @@ public class Query {
 					"			<http://bio2rdf.org/pharmgkb:"+pharmgkb_id+"> <http://bio2rdf.org/pharmgkb_vocabulary:x-atc> ?atc_uri.\n" + 
 					"			BIND(replace(str(?atc_uri), \"http://bio2rdf.org/atc:\", \"\") AS ?atc)\n" + 
 					"			}";
-			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://pharmgkb.bio2rdf.org/sparql", queryLinks);
+			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/pharmgkb/sparql", queryLinks);
 			queryExec.addParam("timeout","3600000");
 			return queryExec.execSelect();
 			
