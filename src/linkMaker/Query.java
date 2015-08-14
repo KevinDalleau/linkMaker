@@ -135,7 +135,7 @@ public class Query {
 				stitchValues += "(<http://bio2rdf.org/stitch:-".concat(Integer.toString((Integer.parseInt(stitchIds.get(i))+100000000))).concat(">)");
 			}
 			
-			String queryLinks = "SELECT ?stitch_id ?2_hops_links_2 ?disease\n" + 
+			String queryLinks = "SELECT DISTINCT ?stitch_id ?2_hops_links_2 ?disease\n" + 
 					"WHERE {\n" + 
 					"  {\n" + 
 					"  VALUES(?stitch_id_uri) {\n" + 
@@ -158,6 +158,7 @@ public class Query {
 					"  BIND(REPLACE(str(?disease_uri), \"http://bio2rdf.org/umls:\",\"\") AS ?disease)\n" + 
 					"  }}\n" + 
 					"";
+				System.out.println(queryLinks);
 				QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/sider/sparql", queryLinks);
 				queryExec.addParam("timeout","3600000");
 				return queryExec.execSelect();
