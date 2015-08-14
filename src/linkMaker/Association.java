@@ -74,11 +74,11 @@ public class Association {
 	
 	private List<String> getCombinations(List<List<String>> globalList) {
 		List<String> result = new ArrayList<String>();
-		if(globalList.get(0)!=null && globalList.size() != 0 && globalList.get(0).size() != 0) {
+		if(globalList.get(0)!=null && globalList.size() != 0 /*&& globalList.get(0).size() != 0*/) {
 			result = globalList.get(0);
 		}
 		for(int i = 1; i<globalList.size();i++) {
-			if(globalList.get(i) !=null && globalList.get(i).size() != 0) {
+			if(globalList.get(i) !=null /*&& globalList.get(i).size() != 0*/) {
 				result = combineLists(result,globalList.get(i));
 			}
 		}
@@ -88,13 +88,31 @@ public class Association {
 	private List<String> combineLists(List<String> list1, List<String> list2) {
 		List<String> result = new ArrayList<String>();
 		StringBuilder builder = new StringBuilder();
-		for(String string1 : list1) {
+		if(list1.size() !=0 && list2.size() != 0) {
+			for(String string1 : list1) {
+				for(String string2 : list2) {
+					builder.setLength(0);
+					builder.append(string1).append(",").append(string2);
+					result.add(builder.toString());
+				}
+			}	
+		}
+		else if(list1.size() !=0 && list2.size() == 0){ // The second list is empty, but still, we need the elements of the first list. N.A appended to each element of list 1.
+			for(String string1 : list1) {
+					builder.setLength(0);
+					builder.append(string1).append(",").append("N.A");
+					result.add(builder.toString());
+			}	
+		}
+		else if(list1.size() == 0 && list2.size() !=0) {
 			for(String string2 : list2) {
 				builder.setLength(0);
-				builder.append(string1).append(",").append(string2);
+				builder.append("N.A").append(",").append(string2);
 				result.add(builder.toString());
-			}
+		}	
 		}
+		
+		
 		return result;
 	}
 	
