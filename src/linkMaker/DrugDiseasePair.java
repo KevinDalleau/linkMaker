@@ -82,7 +82,20 @@ public class DrugDiseasePair implements Serializable {
 				drugDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());;
 				drugDiseasesPairs.add(drugDiseasePair);
 			}
-		}	
+		}
+		if(query.getDrugDiseaseRelationsFromMedispan(drug) != null) {
+			ResultSet medispan = query.getDrugDiseaseRelationsFromMedispan(drug);
+			while(medispan.hasNext()) {
+				QuerySolution solution = medispan.nextSolution();
+				RDFNode twoHopsLinksNode = solution.get("2_hops_links_2");
+				RDFNode diseaseNode = solution.get("disease");
+				Disease disease= new Disease(diseaseNode.toString());
+				DrugDiseasePair drugDiseasePair = new DrugDiseasePair(drug,disease);
+				drugDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());;
+				drugDiseasesPairs.add(drugDiseasePair);
+			}
+		}
+		
 		return drugDiseasesPairs;
 	}
 	@Override

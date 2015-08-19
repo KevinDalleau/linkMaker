@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Association {
 	private DrugGenePair drugGenePair;
 	private GeneDiseasePair geneDiseasePair;
@@ -32,7 +34,12 @@ public class Association {
 		List<List<String>> globalList = new ArrayList<List<String>>();
 		globalList.add(geneAttributes);
 		globalList.add(drugAttributes);
-		globalList.add(diseaseAttributes);
+		if(diseaseAttributes != null) {
+			globalList.add(diseaseAttributes);
+		}
+		else{
+			globalList.add(new ArrayList<String>());
+		}
 		globalList.add(one_hops_links);
 		globalList.add(two_hops_links_1);
 		globalList.add(two_hops_links_2);
@@ -41,9 +48,14 @@ public class Association {
 		System.out.println(numberOfPaths);
 		
 		List<String> list = this.getCombinations(globalList);
-		System.out.println(list);
+//		System.out.println(list);
 		for(String output : list) {
-			System.out.println(output);
+			int numberOfOccurrences = StringUtils.countMatches(output, ",");
+			if(numberOfOccurrences!=5) {
+				System.out.println(this.getDrugDiseasePair().getDrug().getPharmgkb_id()+this.getGeneDiseasePair().getGene().getEntrez_id());
+				System.out.println(list);
+				System.out.println(output);
+			}
 			File linksFile = null;
 			if(type.equals("linked")) {
 				linksFile = new File("./links.csv");
@@ -53,6 +65,9 @@ public class Association {
 			}
 			else if(type.equals("specific")) {
 				linksFile = new File("./specificlinks.csv");
+			}
+			else if(type.equals("ambiguous")) {
+				linksFile = new File("./ambiguous.csv");
 			}
 			if(!linksFile.exists()) {
 				try {
@@ -77,6 +92,7 @@ public class Association {
 		if(globalList.get(0)!=null && globalList.size() != 0 /*&& globalList.get(0).size() != 0*/) {
 			result = globalList.get(0);
 		}
+		
 		for(int i = 1; i<globalList.size();i++) {
 			if(globalList.get(i) !=null /*&& globalList.get(i).size() != 0*/) {
 				result = combineLists(result,globalList.get(i));
@@ -110,6 +126,11 @@ public class Association {
 				builder.append("N.A").append(",").append(string2);
 				result.add(builder.toString());
 		}	
+		}
+		else if(list1.size() == 0 && list2.size() ==0) {
+				builder.setLength(0);
+				builder.append("N.A").append(",").append("N.A");
+				result.add(builder.toString());
 		}
 		
 		

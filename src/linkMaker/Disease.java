@@ -19,7 +19,7 @@ public class Disease implements Serializable{
 	public Disease(String cui) {
 		this.cui = cui;
 		this.pharmgkbid = "";
-		this.attributes = null;
+		this.attributes = new ArrayList<String>();
 	}
 
 	@Override

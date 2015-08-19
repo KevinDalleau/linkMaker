@@ -44,59 +44,22 @@ public class Main implements Serializable{
 			pairs = DrugGenePair.getNotAssociatedPairs();
 			typeOfAssociation = "not_linked";
 		}
+		
+		else if(args[0].equalsIgnoreCase("ambiguous")) {
+			pairs = DrugGenePair.getAmbiguousPairs();
+			typeOfAssociation = "ambiguous";
+		}
 
 		else if(args[0].equalsIgnoreCase("specific")) {
-			pairs = DrugGenePair.getSpecificPair(args[1], args[2]);
+			//pairs = DrugGenePair.getSpecificPair(args[1], args[2]);
+			Drug drug = new Drug(args[2]);
+			Gene gene = new Gene(args[1]);
+			pairs.add(new DrugGenePair(gene, drug));
 			typeOfAssociation = "specific";
 		}
 
-		File finalGeneDiseasePairsFile = new File("./finalGeneDiseasePairs_notlinked.ser");
-		File finalDrugDiseasePairsFile = new File("./finalDrugDiseasePairs_notlinked.ser");
-		HashSet<GeneDiseasePair> finalGeneDiseasePairs = new HashSet<GeneDiseasePair>();
-		HashSet<DrugDiseasePair> finalDrugDiseasePairs = new HashSet<DrugDiseasePair>();
-		Boolean pairStored = true;
-
-		if(finalGeneDiseasePairsFile.exists()) {
-			try {
-				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(finalGeneDiseasePairsFile));
-				finalGeneDiseasePairs = (HashSet<GeneDiseasePair>) ois.readObject();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else {
-			pairStored=false;
-		}
-
-		if(finalDrugDiseasePairsFile.exists()) {
-			try {
-				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(finalDrugDiseasePairsFile));
-				finalDrugDiseasePairs = (HashSet<DrugDiseasePair>) ois.readObject();
-
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else {
-			pairStored=false;
-		}
-
 		System.out.println("Number of known pairs : "+ pairs.size());
-		//		if(!pairStored) {
+		
 		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = GeneDiseasePair.getGeneDiseasesPairs();
 		HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
 		HashMap<String,ArrayList<String>> geneAttributes = Gene.getGeneAttributes();
@@ -118,8 +81,9 @@ public class Main implements Serializable{
 			drug.setATC();
 			ArrayList<GeneDiseasePair> geneDiseasesPairs = geneDiseasePairs.get(gene.getEntrez_id());
 			ArrayList<DrugDiseasePair> drugDiseasesPairs = DrugDiseasePair.getDrugDiseasesPairs(drug);
-			
 			if(geneDiseasesPairs != null && drugDiseasesPairs != null) {
+				System.out.println("Number of gene-disease pairs found : "+geneDiseasesPairs.size());
+				System.out.println("Number of drug-disease pairs found : "+drugDiseasesPairs.size());
 				for(GeneDiseasePair gdpair : geneDiseasesPairs) {
 					for(DrugDiseasePair ddpair : drugDiseasesPairs) {
 						if (gdpair.getDisease().getCui().equals(ddpair.getDisease().getCui())) {
