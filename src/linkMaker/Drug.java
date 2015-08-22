@@ -126,7 +126,12 @@ public class Drug implements Serializable{
 				QuerySolution solution = atc.nextSolution();
 				RDFNode atcCode = solution.get("atc");
 				if(atcCode != null) {
-					this.addAttribute(atcCode.toString().substring(0, 3));
+					if(atcCode.toString().length() > 4) {
+						this.addAttribute(atcCode.toString().substring(0, 3));
+					}
+					else {
+						this.addAttribute(atcCode.toString());
+					}
 				}
 			}
 			
