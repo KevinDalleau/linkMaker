@@ -13,7 +13,7 @@ public class Query {
 	
 	private String stitchValues;
 	
-	public ResultSet getAtcCodes(Drug drug) {
+	public QueryEngineHTTP getAtcCodes(Drug drug) {
 		
 		if(drug.getPharmgkb_id() !=null) {
 			String pharmgkb_id = drug.getPharmgkb_id();
@@ -26,14 +26,14 @@ public class Query {
 					"			}";
 			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/pharmgkb/sparql", queryLinks);
 			queryExec.addParam("timeout","3600000");
-			return queryExec.execSelect();
+			return queryExec; //.execSelect();
 			
 		}
 
 		else return null;
 		}
 	
-	public ResultSet getTargets(Drug drug) {
+	public QueryEngineHTTP getTargets(Drug drug) {
 		if(drug.getDrugbank_id() !=null) {
 			String drugbank_id = drug.getDrugbank_id();
 			String queryLinks = "PREFIX http: <http://www.w3.org/2011/http#>\n" + 
@@ -46,7 +46,7 @@ public class Query {
 					"}";
 			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr:/drugbank/sparql", queryLinks);
 			queryExec.addParam("timeout","3600000");
-			return queryExec.execSelect();
+			return queryExec;
 			
 		}
 
@@ -54,7 +54,7 @@ public class Query {
 		}
 	
 
-	public ResultSet getGeneDiseaseRelations(String source) {
+	public QueryEngineHTTP getGeneDiseaseRelations(String source) {
 		if (source.equals("disgenet")) {
 			String queryLinks = "PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
 					"PREFIX  foaf: <http://xmlns.com/foaf/0.1/>\n" + 
@@ -91,7 +91,7 @@ public class Query {
 			
 			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/disgenet/sparql", queryLinks);
 			queryExec.addParam("timeout","3600000");
-			return queryExec.execSelect();
+			return queryExec;
 		}
 		else if (source.equals("clinvar")) {
 			String queryLinks = "SELECT DISTINCT ?gene ?disease ?2_hops_links1\n" + 
@@ -120,14 +120,14 @@ public class Query {
 			
 			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/clinvar/sparql", queryLinks);
 			queryExec.addParam("timeout","3600000");
-			return queryExec.execSelect();
+			return queryExec;
 			
 		}
 		else {
 			return null;
 		}
 	}
-	public ResultSet getDrugDiseaseRelationsFromSider(Drug drug) {
+	public QueryEngineHTTP getDrugDiseaseRelationsFromSider(Drug drug) {
 		if(drug.getStitch_ids() !=null) {
 			ArrayList<String> stitchIds = drug.getStitch_ids();
 			stitchValues = "";
@@ -160,13 +160,13 @@ public class Query {
 					"";
 				QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/sider/sparql", queryLinks);
 				queryExec.addParam("timeout","3600000");
-				return queryExec.execSelect();
+				return queryExec;
 		}
 		else return null;
 		
 	}
 	
-	public ResultSet getDrugDiseaseRelationsFromMedispan(Drug drug) {
+	public QueryEngineHTTP getDrugDiseaseRelationsFromMedispan(Drug drug) {
 		if(drug.getPharmgkb_id() !=null) {
 			Mapper mapper = new Mapper();
 			String cui = mapper.getUMLS_from_PharmGKB(drug.getPharmgkb_id());
@@ -199,7 +199,7 @@ public class Query {
 						"";
 					QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/medispan/sparql", queryLinks);
 					queryExec.addParam("timeout","3600000");
-					return queryExec.execSelect();
+					return queryExec;
 			}
 			else return null;
 		}
@@ -209,7 +209,7 @@ public class Query {
 	}
 	
 	
-	public ResultSet getDrugDiseaseRelations(String source) {
+	public QueryEngineHTTP getDrugDiseaseRelations(String source) {
 		if (source.equals("medispan")) {
 			String queryLinks = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" + 
 				"SELECT ?drug ?2_hops_links2 ?disease\n" + 
@@ -223,7 +223,7 @@ public class Query {
 			
 			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/medispan/sparql", queryLinks);
 			queryExec.addParam("timeout","3600000");
-			return queryExec.execSelect();
+			return queryExec;
 		}
 		else if (source.equals("sider")) {
 			String queryLinks = "SELECT ?stitch_id ?2_hops_links_2 ?disease\n" + 
@@ -246,7 +246,7 @@ public class Query {
 			
 			QueryEngineHTTP queryExec = (QueryEngineHTTP) QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/sider/sparql", queryLinks);
 			queryExec.addParam("timeout","3600000");
-			return queryExec.execSelect();
+			return queryExec;
 			
 		}
 		else {

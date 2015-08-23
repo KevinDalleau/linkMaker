@@ -121,7 +121,8 @@ public class Drug implements Serializable{
 	public void setATC() {
 		linkMaker.Query query = new linkMaker.Query();
 		if(query.getAtcCodes(this) != null) {
-			ResultSet atc = query.getAtcCodes(this);
+			QueryEngineHTTP atcQuery = query.getAtcCodes(this);
+			ResultSet atc = atcQuery.execSelect();
 			while(atc.hasNext()) {
 				QuerySolution solution = atc.nextSolution();
 				RDFNode atcCode = solution.get("atc");
@@ -134,6 +135,7 @@ public class Drug implements Serializable{
 					}
 				}
 			}
+			atcQuery.close();
 			
 		}
 		
@@ -142,7 +144,8 @@ public class Drug implements Serializable{
 	public void setTargets() {
 		linkMaker.Query query = new linkMaker.Query();
 		if(query.getTargets(this) != null) {
-			ResultSet targets = query.getTargets(this);
+			QueryEngineHTTP targetsQuery = query.getTargets(this);
+			ResultSet targets = targetsQuery.execSelect();
 			while(targets.hasNext()) {
 				QuerySolution solution = targets.nextSolution();
 				RDFNode targetsNode = solution.get("target");
@@ -150,6 +153,7 @@ public class Drug implements Serializable{
 					this.addTarget(targetsNode.toString());
 				}
 			}
+			targetsQuery.close();
 		}
 		
 	}

@@ -113,8 +113,10 @@ public class GeneDiseasePair implements Serializable{
 	public static HashMap<String, ArrayList<GeneDiseasePair>> getGeneDiseasesPairs() {
 		HashMap<String, ArrayList<GeneDiseasePair>> geneDiseasesPairs = new HashMap<String, ArrayList<GeneDiseasePair>>();
 		Query query = new Query();
-		ResultSet disgenet = query.getGeneDiseaseRelations("disgenet");
-		ResultSet clinvar = query.getGeneDiseaseRelations("clinvar");
+		QueryEngineHTTP disgenetQuery = query.getGeneDiseaseRelations("disgenet");
+		QueryEngineHTTP clinvarQuery = query.getGeneDiseaseRelations("clinvar");
+		ResultSet disgenet = disgenetQuery.execSelect();
+		ResultSet clinvar = clinvarQuery.execSelect();
 	
 		while(clinvar.hasNext()) {
 			QuerySolution solution = clinvar.nextSolution();
@@ -144,6 +146,7 @@ public class GeneDiseasePair implements Serializable{
 				geneDiseasesPairs.put(geneNode.toString(), pair);
 			}
 		};
+		clinvarQuery.close();
 		System.out.println("Clinvar data for gene-disease links stored");
 		
 		while(disgenet.hasNext()) {
@@ -175,6 +178,7 @@ public class GeneDiseasePair implements Serializable{
 				geneDiseasesPairs.put(geneNode.toString(), pair);
 			}
 		};
+		disgenetQuery.close();
 		System.out.println("Disgenet data for gene-disease links stored");
 		
 		

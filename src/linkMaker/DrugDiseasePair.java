@@ -72,9 +72,10 @@ public class DrugDiseasePair implements Serializable {
 		ArrayList<DrugDiseasePair> drugDiseasesPairs = new ArrayList<DrugDiseasePair>(100);
 		Query query = new Query();
 		if(query.getDrugDiseaseRelationsFromSider(drug) != null) {
-			ResultSet Sider = query.getDrugDiseaseRelationsFromSider(drug);
-			while(Sider.hasNext()) {
-				QuerySolution solution = Sider.nextSolution();
+			QueryEngineHTTP siderQuery = query.getDrugDiseaseRelationsFromSider(drug);
+			ResultSet sider = siderQuery.execSelect();
+			while(sider.hasNext()) {
+				QuerySolution solution = sider.nextSolution();
 				RDFNode twoHopsLinksNode = solution.get("2_hops_links_2");
 				RDFNode diseaseNode = solution.get("disease");
 				Disease disease= new Disease(diseaseNode.toString());
@@ -82,9 +83,11 @@ public class DrugDiseasePair implements Serializable {
 				drugDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());;
 				drugDiseasesPairs.add(drugDiseasePair);
 			}
+			siderQuery.close();
 		}
 		if(query.getDrugDiseaseRelationsFromMedispan(drug) != null) {
-			ResultSet medispan = query.getDrugDiseaseRelationsFromMedispan(drug);
+			QueryEngineHTTP medispanQuery = query.getDrugDiseaseRelationsFromMedispan(drug);
+			ResultSet medispan = medispanQuery.execSelect();
 			while(medispan.hasNext()) {
 				QuerySolution solution = medispan.nextSolution();
 				RDFNode twoHopsLinksNode = solution.get("2_hops_links_2");
@@ -94,6 +97,7 @@ public class DrugDiseasePair implements Serializable {
 				drugDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());;
 				drugDiseasesPairs.add(drugDiseasePair);
 			}
+			medispanQuery.close();
 		}
 		
 		return drugDiseasesPairs;
@@ -139,7 +143,8 @@ public class DrugDiseasePair implements Serializable {
 		Mapper mapper = new Mapper();
 		HashMap<String, ArrayList<DrugDiseasePair>> drugDiseasesPairs = new HashMap<String, ArrayList<DrugDiseasePair>>();
 		Query query = new Query();
-		ResultSet medispan = query.getDrugDiseaseRelations("medispan");
+		QueryEngineHTTP medispanQuery = query.getDrugDiseaseRelations("medispan");
+		ResultSet medispan = medispanQuery.execSelect();
 		//ResultSet sider = query.getDrugDiseaseRelations("sider");
 		
 		while(medispan.hasNext()) {
@@ -170,6 +175,7 @@ public class DrugDiseasePair implements Serializable {
 				drugDiseasesPairs.put(drugNode.toString(), pair);
 			}
 		};
+		medispanQuery.close();
 		
 //		while(sider.hasNext()) { //Warning : drug here is not the CUI, but the Stitch ID (unformatted)
 //			QuerySolution solution = medispan.nextSolution();
