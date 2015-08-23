@@ -69,6 +69,9 @@ public class Association {
 			else if(type.equals("ambiguous")) {
 				linksFile = new File("./ambiguous.csv");
 			}
+			else if(type.equals("guessed")) {
+				linksFile = new File("./guessed.csv");
+			}
 			if(!linksFile.exists()) {
 				try {
 					linksFile.createNewFile();

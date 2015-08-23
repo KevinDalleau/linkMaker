@@ -1,7 +1,14 @@
 package linkMaker;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -264,6 +271,26 @@ public class DrugGenePair {
 			pairs.add(drugGenePair);	
 		}
 		
+		return pairs;
+	}
+	
+	public static LinkedList<DrugGenePair> getGuessedNotAssociatedPairs() throws IOException {
+		LinkedList<DrugGenePair> pairs = new LinkedList<DrugGenePair>();
+		Reader notLinkedFile = null;
+		try {
+			notLinkedFile = new FileReader("./notLinkedFile.tsv");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		CSVReader reader = new CSVReader(notLinkedFile,'\t');
+		List<String[]> tsv = reader.readAll();
+		for(String[] pair : tsv) {
+			Gene gene = new Gene(pair[0]);
+			Drug drug = new Drug(pair[1]);
+			DrugGenePair drugGenePair = new DrugGenePair(gene, drug);
+			pairs.add(drugGenePair);
+		}
 		return pairs;
 	}
 

@@ -38,8 +38,6 @@ public class Main implements Serializable{
 			typeOfAssociation = "linked";
 
 		}
-
-
 		else if(args[0].equalsIgnoreCase("not_linked")) {
 			pairs = DrugGenePair.getNotAssociatedPairs();
 			typeOfAssociation = "not_linked";
@@ -49,7 +47,6 @@ public class Main implements Serializable{
 			pairs = DrugGenePair.getAmbiguousPairs();
 			typeOfAssociation = "ambiguous";
 		}
-
 		else if(args[0].equalsIgnoreCase("specific")) {
 			//pairs = DrugGenePair.getSpecificPair(args[1], args[2]);
 			Drug drug = new Drug(args[2]);
@@ -57,10 +54,39 @@ public class Main implements Serializable{
 			pairs.add(new DrugGenePair(gene, drug));
 			typeOfAssociation = "specific";
 		}
+		else if(args[0].equalsIgnoreCase("guessed_not_linked")) {
+			try {
+				pairs = DrugGenePair.getGuessedNotAssociatedPairs();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			typeOfAssociation = "guessed";
+		}
 
 		System.out.println("Number of known pairs : "+ pairs.size());
 		
-		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = GeneDiseasePair.getGeneDiseasesPairs();
+		HashMap<String,ArrayList<GeneDiseasePair>> geneDiseasePairs = new HashMap<String, ArrayList<GeneDiseasePair>>();
+		
+		File geneDiseasePairsFile = new File("./geneDiseasePairs.ser");
+		if(geneDiseasePairsFile.exists()) {
+			ObjectInputStream ois = null;
+			try {
+				ois = new ObjectInputStream(new FileInputStream(geneDiseasePairsFile));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				geneDiseasePairs = (HashMap<String, ArrayList<GeneDiseasePair>>) ois.readObject();
+			} catch (ClassNotFoundException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}
+		else {
+			geneDiseasePairs = GeneDiseasePair.getGeneDiseasesPairs();
+		}
 		HashMap<String,String> geneEntrezLinks = Gene.getPharmgkbIDEntrezIDLinks();
 		HashMap<String,ArrayList<String>> geneAttributes = Gene.getGeneAttributes();
 		HashMap<String,ArrayList<String>> diseaseAttributes = Disease.getDiseaseAttributes();
