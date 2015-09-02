@@ -56,6 +56,7 @@ public class Association {
 				System.out.println(list);
 				System.out.println(output);
 			}
+			output+= this.getGeneDiseasePair().getGene().getPharmgkb_id()+this.getDrugDiseasePair().getDrug().getPharmgkb_id()+","+output; // Adding pair identifier in output path
 			File linksFile = null;
 			if(type.equals("linked")) {
 				linksFile = new File("./links.csv");

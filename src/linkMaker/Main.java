@@ -92,6 +92,7 @@ public class Main implements Serializable{
 		HashMap<String,ArrayList<String>> diseaseAttributes = Disease.getDiseaseAttributes();
 		Iterator<DrugGenePair> iterator = pairs.iterator();
 		int i = 0;
+		int numberOfPaths = 0;
 		while(iterator.hasNext()) {
 			System.out.println("Pair number "+i);
 			i++;
@@ -110,17 +111,22 @@ public class Main implements Serializable{
 			if(geneDiseasesPairs != null && drugDiseasesPairs != null) {
 				System.out.println("Number of gene-disease pairs found : "+geneDiseasesPairs.size());
 				System.out.println("Number of drug-disease pairs found : "+drugDiseasesPairs.size());
-				for(GeneDiseasePair gdpair : geneDiseasesPairs) {
-					for(DrugDiseasePair ddpair : drugDiseasesPairs) {
-						if (gdpair.getDisease().getCui().equals(ddpair.getDisease().getCui())) {
-							ddpair.getDisease().setAttributes(diseaseAttributes.get(ddpair.getDisease().getCui()));
-							gdpair.getGene().setAttributes(geneAttributes.get(gdpair.getGene().getEntrez_id()));
-							gdpair.getDisease().setAttributes(diseaseAttributes.get(gdpair.getDisease().getCui()));
-							Association association = new Association(pair,gdpair,ddpair);
-							association.printAssociation(typeOfAssociation);
+				while(numberOfPaths <= 3576) {
+					for(GeneDiseasePair gdpair : geneDiseasesPairs) {
+						for(DrugDiseasePair ddpair : drugDiseasesPairs) {
+							if (gdpair.getDisease().getCui().equals(ddpair.getDisease().getCui())) {
+								numberOfPaths++;
+								ddpair.getDisease().setAttributes(diseaseAttributes.get(ddpair.getDisease().getCui()));
+								gdpair.getGene().setAttributes(geneAttributes.get(gdpair.getGene().getEntrez_id()));
+								gdpair.getDisease().setAttributes(diseaseAttributes.get(gdpair.getDisease().getCui()));
+								Association association = new Association(pair,gdpair,ddpair);
+								association.printAssociation(typeOfAssociation);
+							}
 						}
 					}
 				}
+				
+				
 			}				
 		}
 	}		

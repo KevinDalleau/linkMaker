@@ -1,8 +1,13 @@
 package linkMaker;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Properties;
 
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -16,10 +21,12 @@ public class Disease implements Serializable{
 	String pharmgkbid;
 	ArrayList<String> attributes;
 	
+	
 	public Disease(String cui) {
 		this.cui = cui;
 		this.pharmgkbid = "";
 		this.attributes = new ArrayList<String>();
+		
 	}
 
 	@Override
@@ -120,7 +127,7 @@ public class Disease implements Serializable{
 					"  }\n" + 
 					"}";
 			
-			QueryExecution queryExec = QueryExecutionFactory.sparqlService("http://cassandra.kevindalleau.fr/disgenet/sparql", queryLinks);
+			QueryExecution queryExec = QueryExecutionFactory.sparqlService("http://127.0.0.1/disgenet/sparql", queryLinks);
 			ResultSet results = queryExec.execSelect();
 			while(results.hasNext()) {
 				QuerySolution solution = results.nextSolution();
