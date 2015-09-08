@@ -51,18 +51,21 @@ public class Association {
 //		System.out.println(list);
 		for(String output : list) {
 			int numberOfOccurrences = StringUtils.countMatches(output, ",");
+			output = this.drugGenePair.getGene().getPharmgkb_id()+this.getDrugDiseasePair().getDrug().getPharmgkb_id()+","+output; // Adding pair identifier in output path
 			if(numberOfOccurrences!=5) {
 				System.out.println(this.getDrugDiseasePair().getDrug().getPharmgkb_id()+this.getGeneDiseasePair().getGene().getEntrez_id());
 				System.out.println(list);
 				System.out.println(output);
 			}
-			output+= this.getGeneDiseasePair().getGene().getPharmgkb_id()+this.getDrugDiseasePair().getDrug().getPharmgkb_id()+","+output; // Adding pair identifier in output path
 			File linksFile = null;
 			if(type.equals("linked")) {
 				linksFile = new File("./links.csv");
 			}
 			else if(type.equals("not_linked")) {
 				linksFile = new File("./nolinks.csv");
+			}
+			else if(type.equals("not_linked_list")) {
+				linksFile = new File("./not_linked_pairs.csv");
 			}
 			else if(type.equals("specific")) {
 				linksFile = new File("./specificlinks.csv");
@@ -72,6 +75,9 @@ public class Association {
 			}
 			else if(type.equals("guessed")) {
 				linksFile = new File("./guessed.csv");
+			}
+			else if(type.equals("file")) {
+				linksFile = new File("./file.csv");
 			}
 			if(!linksFile.exists()) {
 				try {
@@ -120,20 +126,20 @@ public class Association {
 		else if(list1.size() !=0 && list2.size() == 0){ // The second list is empty, but still, we need the elements of the first list. N.A appended to each element of list 1.
 			for(String string1 : list1) {
 					builder.setLength(0);
-					builder.append(string1).append(",").append("N.A");
+					builder.append(string1).append(",").append("?");
 					result.add(builder.toString());
 			}	
 		}
 		else if(list1.size() == 0 && list2.size() !=0) {
 			for(String string2 : list2) {
 				builder.setLength(0);
-				builder.append("N.A").append(",").append(string2);
+				builder.append("?").append(",").append(string2);
 				result.add(builder.toString());
 		}	
 		}
 		else if(list1.size() == 0 && list2.size() ==0) {
 				builder.setLength(0);
-				builder.append("N.A").append(",").append("N.A");
+				builder.append("?").append(",").append("?");
 				result.add(builder.toString());
 		}
 		

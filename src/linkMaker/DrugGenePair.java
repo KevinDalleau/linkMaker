@@ -293,6 +293,26 @@ public class DrugGenePair {
 		}
 		return pairs;
 	}
+	
+	public static LinkedList<DrugGenePair> getFilePairs(String file) throws IOException {
+		LinkedList<DrugGenePair> pairs = new LinkedList<DrugGenePair>();
+		Reader notLinkedFile = null;
+		try {
+			notLinkedFile = new FileReader("./"+file+".tsv");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		CSVReader reader = new CSVReader(notLinkedFile,'\t');
+		List<String[]> tsv = reader.readAll();
+		for(String[] pair : tsv) {
+			Gene gene = new Gene(pair[0]);
+			Drug drug = new Drug(pair[1]);
+			DrugGenePair drugGenePair = new DrugGenePair(gene, drug);
+			pairs.add(drugGenePair);
+		}
+		return pairs;
+	}
 
 
 	public void setOneHopsLinks(ArrayList<String> oneHopsLinks) {

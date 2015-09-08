@@ -1,10 +1,12 @@
 package linkMaker;
 
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -63,6 +65,29 @@ public class Main implements Serializable{
 			}
 			typeOfAssociation = "guessed";
 		}
+		
+		else if(args[0].equalsIgnoreCase("get_not_linked_list")) {
+			try {
+				pairs = DrugGenePair.getGuessedNotAssociatedPairs();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			typeOfAssociation = "not_linked_list";
+		}
+		
+		else if(args[0].equalsIgnoreCase("file")) {
+			if(args[1]!= null) {
+				try {
+					pairs = DrugGenePair.getFilePairs(args[1]);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				typeOfAssociation = "file";
+			}
+			
+		}
 
 		System.out.println("Number of known pairs : "+ pairs.size());
 		
@@ -111,7 +136,6 @@ public class Main implements Serializable{
 			if(geneDiseasesPairs != null && drugDiseasesPairs != null) {
 				System.out.println("Number of gene-disease pairs found : "+geneDiseasesPairs.size());
 				System.out.println("Number of drug-disease pairs found : "+drugDiseasesPairs.size());
-				while(numberOfPaths <= 3576) {
 					for(GeneDiseasePair gdpair : geneDiseasesPairs) {
 						for(DrugDiseasePair ddpair : drugDiseasesPairs) {
 							if (gdpair.getDisease().getCui().equals(ddpair.getDisease().getCui())) {
@@ -119,12 +143,32 @@ public class Main implements Serializable{
 								ddpair.getDisease().setAttributes(diseaseAttributes.get(ddpair.getDisease().getCui()));
 								gdpair.getGene().setAttributes(geneAttributes.get(gdpair.getGene().getEntrez_id()));
 								gdpair.getDisease().setAttributes(diseaseAttributes.get(gdpair.getDisease().getCui()));
-								Association association = new Association(pair,gdpair,ddpair);
-								association.printAssociation(typeOfAssociation);
+								if(typeOfAssociation.equals("not_linked_list")) {
+									File linksFile = new File("./not_linked_pairs.csv");
+									if(!linksFile.exists()) {
+										try {
+											linksFile.createNewFile();
+										} catch (IOException e) {
+											e.printStackTrace();
+										}
+									}
+									try {
+										FileWriter fileWriter = new FileWriter(linksFile.getName(), true);
+										BufferedWriter bufferWritter = new BufferedWriter(fileWriter);
+						    	        bufferWritter.write(pair.getGene().getPharmgkb_id()+"\t"+pair.getDrug().getPharmgkb_id()+"\n");
+						    	        bufferWritter.close();
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								}
+								else {
+									Association association = new Association(pair,gdpair,ddpair);
+									association.printAssociation(typeOfAssociation);
+								}
+								
 							}
 						}
 					}
-				}
 				
 				
 			}				
