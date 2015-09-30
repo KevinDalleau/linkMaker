@@ -66,15 +66,27 @@ public class Main implements Serializable{
 			typeOfAssociation = "guessed";
 		}
 		
-		else if(args[0].equalsIgnoreCase("get_not_linked_list")) {
+		else if(args[0].equalsIgnoreCase("get_not_linked_guessed_list")) {
 			try {
 				pairs = DrugGenePair.getGuessedNotAssociatedPairs();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			typeOfAssociation = "not_linked_guessed_list";
+		}
+		
+		else if(args[0].equalsIgnoreCase("get_linked_list")) {
+			pairs = DrugGenePair.getAssociatedPairs();
+			typeOfAssociation = "linked_list";
+		}
+		
+		else if(args[0].equalsIgnoreCase("get_not_linked_list")) {
+			pairs = DrugGenePair.getNotAssociatedPairs();
 			typeOfAssociation = "not_linked_list";
 		}
+		
+		
 		
 		else if(args[0].equalsIgnoreCase("file")) {
 			if(args[1]!= null) {
@@ -143,8 +155,17 @@ public class Main implements Serializable{
 								ddpair.getDisease().setAttributes(diseaseAttributes.get(ddpair.getDisease().getCui()));
 								gdpair.getGene().setAttributes(geneAttributes.get(gdpair.getGene().getEntrez_id()));
 								gdpair.getDisease().setAttributes(diseaseAttributes.get(gdpair.getDisease().getCui()));
-								if(typeOfAssociation.equals("not_linked_list")) {
-									File linksFile = new File("./not_linked_pairs.csv");
+								if(typeOfAssociation.equals("not_linked_list") || typeOfAssociation.equals("linked_list")) {
+									File linksFile = null;
+									if(typeOfAssociation.equals("not_linked_list")) {
+										linksFile = new File("./not_linked_pairs.csv");
+									}
+									else if(typeOfAssociation.equals("not_guessed_linked_list")) {
+										linksFile = new File("./not_guessed_linked_pairs.csv");
+									}
+									else if(typeOfAssociation.equals("linked_list")) {
+										linksFile = new File("./linked_pairs.csv");
+									}
 									if(!linksFile.exists()) {
 										try {
 											linksFile.createNewFile();

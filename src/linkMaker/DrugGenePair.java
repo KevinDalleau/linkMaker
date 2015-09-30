@@ -177,7 +177,7 @@ public class DrugGenePair {
 			DrugGenePair drugGenePair = new DrugGenePair(gene, drug);
 			pairs.add(drugGenePair);	
 		}
-		
+		queryExec.close();
 		return pairs;
 		
 	}
@@ -207,7 +207,7 @@ public class DrugGenePair {
 			DrugGenePair drugGenePair = new DrugGenePair(gene, drug);
 			pairs.add(drugGenePair);	
 		}
-		
+		queryExec.close();
 		return pairs;
 		
 	}
@@ -237,7 +237,7 @@ public class DrugGenePair {
 			DrugGenePair drugGenePair = new DrugGenePair(gene, drug);
 			pairs.add(drugGenePair);	
 		}
-		
+		queryExec.close();
 		return pairs;
 		
 	}
@@ -270,7 +270,7 @@ public class DrugGenePair {
 			DrugGenePair drugGenePair = new DrugGenePair(gene, drug);
 			pairs.add(drugGenePair);	
 		}
-		
+		queryExec.close();
 		return pairs;
 	}
 	

@@ -113,9 +113,9 @@ public class GeneDiseasePair implements Serializable{
 	public static HashMap<String, ArrayList<GeneDiseasePair>> getGeneDiseasesPairs() {
 		HashMap<String, ArrayList<GeneDiseasePair>> geneDiseasesPairs = new HashMap<String, ArrayList<GeneDiseasePair>>();
 		Query query = new Query();
-		QueryEngineHTTP disgenetQuery = query.getGeneDiseaseRelations("disgenet");
+//		QueryEngineHTTP disgenetQuery = query.getGeneDiseaseRelations("disgenet");
 		QueryEngineHTTP clinvarQuery = query.getGeneDiseaseRelations("clinvar");
-		ResultSet disgenet = disgenetQuery.execSelect();
+//		ResultSet disgenet = disgenetQuery.execSelect();
 		ResultSet clinvar = clinvarQuery.execSelect();
 	
 		while(clinvar.hasNext()) {
@@ -149,36 +149,36 @@ public class GeneDiseasePair implements Serializable{
 		clinvarQuery.close();
 		System.out.println("Clinvar data for gene-disease links stored");
 		
-		while(disgenet.hasNext()) {
-			QuerySolution solution = disgenet.nextSolution();
-			RDFNode geneNode = solution.get("gene");
-			RDFNode diseaseNode = solution.get("disease");
-			RDFNode twoHopsLinksNode = solution.get("2_hops_links1");
-			Gene gene = new Gene();
-			gene.setEntrez_id(geneNode.toString());
-			
-			Disease disease = new Disease(diseaseNode.toString());
-			GeneDiseasePair geneDiseasePair = new GeneDiseasePair(gene,disease);
-			ArrayList<GeneDiseasePair> associatedPairs = geneDiseasesPairs.get(geneNode.toString());
-			if(associatedPairs != null ) { // Test if a given gene id already has been associated with one or more gene-diseases pair(s)
-				int indexOfPair = GeneDiseasePair.containsGeneDiseasePair(associatedPairs, geneDiseasePair);
-				if(indexOfPair == -1) { //If the pair has not been associated to the gene
-					geneDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());
-					associatedPairs.add(geneDiseasePair);
-				}
-				else {
-					associatedPairs.get(indexOfPair).addTwoHopsLinks(twoHopsLinksNode.toString());
-				}
-				
-			}
-			else {
-				ArrayList<GeneDiseasePair> pair = new ArrayList<GeneDiseasePair>();
-				geneDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());
-				pair.add(geneDiseasePair);
-				geneDiseasesPairs.put(geneNode.toString(), pair);
-			}
-		};
-		disgenetQuery.close();
+//		while(disgenet.hasNext()) {
+//			QuerySolution solution = disgenet.nextSolution();
+//			RDFNode geneNode = solution.get("gene");
+//			RDFNode diseaseNode = solution.get("disease");
+//			RDFNode twoHopsLinksNode = solution.get("2_hops_links1");
+//			Gene gene = new Gene();
+//			gene.setEntrez_id(geneNode.toString());
+//			
+//			Disease disease = new Disease(diseaseNode.toString());
+//			GeneDiseasePair geneDiseasePair = new GeneDiseasePair(gene,disease);
+//			ArrayList<GeneDiseasePair> associatedPairs = geneDiseasesPairs.get(geneNode.toString());
+//			if(associatedPairs != null ) { // Test if a given gene id already has been associated with one or more gene-diseases pair(s)
+//				int indexOfPair = GeneDiseasePair.containsGeneDiseasePair(associatedPairs, geneDiseasePair);
+//				if(indexOfPair == -1) { //If the pair has not been associated to the gene
+//					geneDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());
+//					associatedPairs.add(geneDiseasePair);
+//				}
+//				else {
+//					associatedPairs.get(indexOfPair).addTwoHopsLinks(twoHopsLinksNode.toString());
+//				}
+//				
+//			}
+//			else {
+//				ArrayList<GeneDiseasePair> pair = new ArrayList<GeneDiseasePair>();
+//				geneDiseasePair.addTwoHopsLinks(twoHopsLinksNode.toString());
+//				pair.add(geneDiseasePair);
+//				geneDiseasesPairs.put(geneNode.toString(), pair);
+//			}
+//		};
+//		disgenetQuery.close();
 		System.out.println("Disgenet data for gene-disease links stored");
 		
 		
